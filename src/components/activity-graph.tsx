@@ -8,24 +8,28 @@ export function ActivityGraph({ timeline }: ActivityGraphProps) {
   const maxCount = Math.max(...timeline.map((t) => t.count));
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-      <h3 className="font-semibold text-white mb-4">Project Timeline</h3>
+    <div className="card-hover rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+      <h3 className="font-display font-semibold text-white mb-4">Project Timeline</h3>
       <div className="flex items-end gap-1.5" style={{ height: "80px" }}>
         {timeline.map((t) => {
           const height = Math.max((t.count / maxCount) * 100, 8);
           const label = t.month.split("-")[1];
           const year = t.month.split("-")[0].slice(2);
+          const intensity = t.count / maxCount;
           return (
             <div
               key={t.month}
               className="group relative flex flex-1 flex-col items-center"
             >
-              <div className="absolute -top-6 hidden rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-white group-hover:block">
+              <div className="absolute -top-7 hidden rounded-lg bg-[--color-surface-hover] px-2 py-1 text-[10px] font-medium text-white shadow-lg group-hover:block">
                 {t.count} {t.count === 1 ? "project" : "projects"}
               </div>
               <div
-                className="w-full rounded-t bg-gradient-to-t from-blue-500/40 to-blue-400/60 transition-all group-hover:from-blue-500/60 group-hover:to-blue-400/80"
-                style={{ height: `${height}%` }}
+                className="w-full rounded-t transition-all group-hover:brightness-125"
+                style={{
+                  height: `${height}%`,
+                  background: `linear-gradient(to top, rgba(139,92,246,${0.3 + intensity * 0.4}), rgba(236,72,153,${0.2 + intensity * 0.3}))`,
+                }}
               />
               <span className="mt-1 text-[9px] text-gray-600">
                 {label}/{year}

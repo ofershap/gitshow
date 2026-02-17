@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { GitHubUser } from "@/lib/types";
 
 interface ShareBarProps {
@@ -7,7 +8,8 @@ interface ShareBarProps {
 }
 
 export function ShareBar({ user }: ShareBarProps) {
-  const url = `https://gitshow.dev/${user.login}`;
+  const [copied, setCopied] = useState(false);
+  const url = `https://gitshow.vercel.app/${user.login}`;
   const text = `Check out ${user.name ?? user.login}'s open source portfolio`;
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
@@ -15,32 +17,46 @@ export function ShareBar({ user }: ShareBarProps) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="flex items-center justify-center gap-3">
-      <a
-        href={twitterUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300 transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
-      >
-        Share on 𝕏
-      </a>
-      <a
-        href={linkedinUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300 transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
-      >
-        Share on LinkedIn
-      </a>
-      <button
-        onClick={handleCopy}
-        className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-gray-300 transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
-      >
-        Copy Link
-      </button>
+    <div className="flex flex-col items-center gap-4">
+      <p className="font-display text-sm font-medium text-gray-400">Share this portfolio</p>
+      <div className="flex items-center gap-3">
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-blue-500/30 hover:text-blue-300"
+        >
+          Share on 𝕏
+        </a>
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-blue-600/30 hover:text-blue-300"
+        >
+          Share on LinkedIn
+        </a>
+        <button
+          onClick={handleCopy}
+          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-violet-500/30 hover:text-violet-300"
+        >
+          {copied ? (
+            <span className="flex items-center gap-1.5">
+              <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Copied!
+            </span>
+          ) : (
+            "Copy Link"
+          )}
+        </button>
+      </div>
     </div>
   );
 }

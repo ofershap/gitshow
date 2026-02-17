@@ -5,12 +5,13 @@ interface SocialLinksProps {
 }
 
 export function SocialLinks({ user }: SocialLinksProps) {
-  const links: { label: string; url: string; icon: React.ReactNode }[] = [];
+  const links: { label: string; url: string; icon: React.ReactNode; color: string }[] = [];
 
   links.push({
     label: "GitHub",
     url: user.html_url,
     icon: <GitHubIcon />,
+    color: "hover:border-gray-400/30 hover:text-white",
   });
 
   if (user.twitter_username) {
@@ -18,6 +19,7 @@ export function SocialLinks({ user }: SocialLinksProps) {
       label: `@${user.twitter_username}`,
       url: `https://x.com/${user.twitter_username}`,
       icon: <XIcon />,
+      color: "hover:border-blue-400/30 hover:text-blue-300",
     });
   }
 
@@ -31,12 +33,15 @@ export function SocialLinks({ user }: SocialLinksProps) {
       label: isLinkedIn ? "LinkedIn" : "Website",
       url,
       icon: isLinkedIn ? <LinkedInIcon /> : <GlobeIcon />,
+      color: isLinkedIn
+        ? "hover:border-blue-500/30 hover:text-blue-300"
+        : "hover:border-violet-400/30 hover:text-violet-300",
     });
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-      <h2 className="mb-4 text-sm font-semibold text-white">Links</h2>
+    <div className="card-hover rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+      <h2 className="mb-4 font-display text-sm font-semibold text-white">Links</h2>
       <div className="flex flex-col gap-2">
         {links.map((link) => (
           <a
@@ -44,7 +49,7 @@ export function SocialLinks({ user }: SocialLinksProps) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-sm text-gray-300 transition-colors hover:border-white/20 hover:text-white"
+            className={`flex items-center gap-3 rounded-xl border border-[--color-border] bg-[--color-surface] px-4 py-2.5 text-sm text-gray-300 transition-all ${link.color}`}
           >
             <span className="text-gray-400">{link.icon}</span>
             {link.label}
@@ -101,7 +106,7 @@ function GlobeIcon() {
 function ArrowUpRightIcon() {
   return (
     <svg
-      className="ml-auto h-3 w-3 text-gray-500"
+      className="ml-auto h-3.5 w-3.5 text-gray-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"

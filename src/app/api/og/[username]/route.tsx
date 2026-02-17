@@ -22,28 +22,54 @@ export async function GET(
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background:
-            "linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%)",
+          background: "linear-gradient(135deg, #0c0c18 0%, #1a1a3a 40%, #13132a 70%, #0c0c18 100%)",
           padding: "50px",
           fontFamily: "system-ui, sans-serif",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
+            position: "absolute",
+            top: "-100px",
+            right: "-100px",
+            width: "400px",
+            height: "400px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-80px",
+            left: "-80px",
+            width: "300px",
+            height: "300px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)",
+          }}
+        />
+
+        <div
+          style={{
             display: "flex",
             alignItems: "center",
-            gap: "24px",
+            gap: "28px",
+            position: "relative",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={user.avatar_url}
             alt=""
-            width={100}
-            height={100}
+            width={110}
+            height={110}
             style={{
-              borderRadius: "20px",
-              border: "3px solid rgba(255,255,255,0.15)",
+              borderRadius: "22px",
+              border: "3px solid rgba(139,92,246,0.3)",
+              boxShadow: "0 0 30px rgba(139,92,246,0.15)",
             }}
           />
           <div
@@ -54,14 +80,15 @@ export async function GET(
           >
             <span
               style={{
-                fontSize: "38px",
+                fontSize: "40px",
                 fontWeight: 700,
                 color: "#ffffff",
+                letterSpacing: "-0.02em",
               }}
             >
               {user.name ?? user.login}
             </span>
-            <span style={{ fontSize: "18px", color: "#60a5fa" }}>
+            <span style={{ fontSize: "18px", color: "#8b5cf6" }}>
               @{user.login}
             </span>
           </div>
@@ -70,51 +97,20 @@ export async function GET(
         <div
           style={{
             display: "flex",
-            gap: "30px",
-            marginTop: "28px",
+            gap: "36px",
+            marginTop: "32px",
+            position: "relative",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span
-              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
-            >
-              {repos.length}
-            </span>
-            <span style={{ fontSize: "12px", color: "#6b7280" }}>Projects</span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span
-              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
-            >
-              {fmtNum(totalStars)}
-            </span>
-            <span style={{ fontSize: "12px", color: "#6b7280" }}>Stars</span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span
-              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
-            >
-              {fmtNum(user.followers)}
-            </span>
-            <span style={{ fontSize: "12px", color: "#6b7280" }}>
-              Followers
-            </span>
-          </div>
+          <StatBox value={repos.length.toString()} label="Projects" color="#8b5cf6" />
+          <StatBox value={fmtNum(totalStars)} label="Stars" color="#f59e0b" />
+          <StatBox value={fmtNum(user.followers)} label="Followers" color="#ec4899" />
           {npmStats && npmStats.totalDownloads > 0 ? (
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span
-                style={{ fontSize: "28px", fontWeight: 700, color: "#ef4444" }}
-              >
-                {fmtNum(npmStats.totalDownloads)}
-              </span>
-              <span style={{ fontSize: "12px", color: "#6b7280" }}>
-                npm dl/mo
-              </span>
-            </div>
+            <StatBox value={fmtNum(npmStats.totalDownloads)} label="npm dl/mo" color="#ef4444" />
           ) : null}
         </div>
 
-        <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>
+        <div style={{ display: "flex", gap: "10px", marginTop: "28px", position: "relative" }}>
           {topCategories.map((cat) => (
             <div
               key={cat.label}
@@ -122,10 +118,10 @@ export async function GET(
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                background: "rgba(255,255,255,0.06)",
-                borderRadius: "12px",
-                padding: "6px 14px",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(139,92,246,0.08)",
+                borderRadius: "14px",
+                padding: "8px 16px",
+                border: "1px solid rgba(139,92,246,0.15)",
               }}
             >
               <span style={{ fontSize: "16px" }}>{cat.emoji}</span>
@@ -140,25 +136,26 @@ export async function GET(
         </div>
 
         {topLangs.length > 0 ? (
-          <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
+          <div style={{ display: "flex", gap: "10px", marginTop: "16px", position: "relative" }}>
             {topLangs.map((lang) => (
               <div
                 key={lang.name}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "6px",
+                  gap: "8px",
                   background: "rgba(255,255,255,0.04)",
-                  borderRadius: "12px",
-                  padding: "6px 14px",
+                  borderRadius: "14px",
+                  padding: "8px 16px",
                 }}
               >
                 <div
                   style={{
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "4px",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "5px",
                     background: lang.color,
+                    boxShadow: `0 0 8px ${lang.color}40`,
                   }}
                 />
                 <span style={{ fontSize: "14px", color: "#9ca3af" }}>
@@ -175,19 +172,22 @@ export async function GET(
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            position: "relative",
           }}
         >
           <span
             style={{
-              fontSize: "22px",
+              fontSize: "24px",
               fontWeight: 700,
-              color: "#60a5fa",
+              background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
+              backgroundClip: "text",
+              color: "transparent",
             }}
           >
             GitShow
           </span>
-          <span style={{ fontSize: "15px", color: "#6b7280" }}>
-            gitshow.dev/{user.login}
+          <span style={{ fontSize: "16px", color: "#6b7280" }}>
+            gitshow.me/{user.login}
           </span>
         </div>
       </div>,
@@ -202,6 +202,28 @@ export async function GET(
     }
     return new Response("Error generating image", { status: 500 });
   }
+}
+
+function StatBox({ value, label, color }: { value: string; label: string; color: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        background: `linear-gradient(135deg, ${color}15, ${color}05)`,
+        borderRadius: "16px",
+        padding: "12px 20px",
+        border: `1px solid ${color}20`,
+      }}
+    >
+      <span
+        style={{ fontSize: "30px", fontWeight: 700, color: "#ffffff" }}
+      >
+        {value}
+      </span>
+      <span style={{ fontSize: "12px", color: "#6b7280" }}>{label}</span>
+    </div>
+  );
 }
 
 function fmtNum(n: number): string {
