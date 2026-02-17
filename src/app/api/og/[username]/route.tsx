@@ -187,7 +187,7 @@ export async function GET(
             GitShow
           </span>
           <span style={{ fontSize: "15px", color: "#6b7280" }}>
-            gitshow.vercel.app/{user.login}
+            gitshow.dev/{user.login}
           </span>
         </div>
       </div>,

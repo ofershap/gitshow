@@ -32,7 +32,7 @@ export default function Home() {
           </code>{" "}
           with{" "}
           <code className="rounded bg-white/10 px-1.5 py-0.5 text-sm text-blue-400">
-            gitshow.me
+            gitshow.dev
           </code>{" "}
           in any profile URL to get a stunning developer portfolio.
         </p>

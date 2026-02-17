@@ -5,13 +5,13 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Your GitHub profile is functional. Let's make it beautiful.**
+**Your GitHub profile, but way better.**
 
 ```
-https://github.com/torvalds  →  https://gitshow.me/torvalds
+github.com/username  →  gitshow.dev/username
 ```
 
-Just replace `github.com` with `gitshow.me` in any profile URL. That's it. No signup, no config, no deploy.
+Replace `github.com` with `gitshow.dev` in any profile URL. No signup, no config, no deploy.
 
 > Inspired by [GitMCP](https://gitmcp.io) — same URL-swap pattern, but for developer portfolios instead of AI context.
 
@@ -21,24 +21,25 @@ Just replace `github.com` with `gitshow.me` in any profile URL. That's it. No si
 
 | GitHub Profile | GitShow Portfolio |
 |---|---|
-| [github.com/torvalds](https://github.com/torvalds) | [gitshow.me/torvalds](https://gitshow.vercel.app/torvalds) |
-| [github.com/sindresorhus](https://github.com/sindresorhus) | [gitshow.me/sindresorhus](https://gitshow.vercel.app/sindresorhus) |
-| [github.com/tj](https://github.com/tj) | [gitshow.me/tj](https://gitshow.vercel.app/tj) |
+| [github.com/sindresorhus](https://github.com/sindresorhus) | [gitshow.dev/sindresorhus](https://gitshow.dev/sindresorhus) |
+| [github.com/torvalds](https://github.com/torvalds) | [gitshow.dev/torvalds](https://gitshow.dev/torvalds) |
+| [github.com/kelseyhightower](https://github.com/kelseyhightower) | [gitshow.dev/kelseyhightower](https://gitshow.dev/kelseyhightower) |
+| [github.com/ThePrimeagen](https://github.com/ThePrimeagen) | [gitshow.dev/ThePrimeagen](https://gitshow.dev/ThePrimeagen) |
 
 ---
 
-## What You Get
+## What GitHub Doesn't Show (But GitShow Does)
 
-Every profile is auto-generated with a bento-grid layout:
-
-| Section | What's shown |
+| Feature | What you see |
 |---------|-------------|
-| **Profile card** | Avatar, name, bio, company, location, member since |
-| **Stats** | Repos, total stars, total forks, followers |
-| **Top repositories** | 6 best repos sorted by stars → recency, with descriptions, language badges, topics |
-| **Language chart** | Visual breakdown of your tech stack across all repos |
-| **Social links** | GitHub, Twitter/X, LinkedIn, website — auto-detected from your profile |
-| **OG image** | Dynamic 1200×630 social card — looks great when shared on Twitter & LinkedIn |
+| **npm downloads** | Total downloads/month across all your packages, with per-package bar chart |
+| **Smart categories** | Repos auto-grouped: MCP Servers, CLI Tools, React & UI, DevOps, i18n... |
+| **Focus areas** | Aggregated topic cloud showing what you specialize in |
+| **Project timeline** | When you shipped projects — your creation velocity |
+| **Tech stack bar** | Visual language breakdown across all repos |
+| **Aggregate stats** | Projects, stars, forks, followers, npm downloads — one glanceable row |
+| **OG social card** | Dynamic 1200×630 image with stats and categories — looks great when shared |
+| **Share buttons** | One-click share to X, LinkedIn, or copy link |
 
 Forks and archived repos are automatically filtered out. Only your original work is shown.
 
@@ -49,9 +50,9 @@ Forks and archived repos are automatically filtered out. Only your original work
 All of these work:
 
 ```
-gitshow.me/username                              # direct
-gitshow.me/?url=https://github.com/username      # query param
-gitshow.me/?https://github.com/username           # bare prefix
+gitshow.dev/username                              # direct
+gitshow.dev/?url=https://github.com/username      # query param
+gitshow.dev/?https://github.com/username           # bare prefix
 ```
 
 ---
@@ -63,7 +64,9 @@ Browser request
     ↓
 Next.js App Router (Vercel Edge)
     ↓
-GitHub REST API (/users, /repos)
+GitHub REST API (/users, /repos)  +  npm Registry API
+    ↓
+Auto-categorize repos by language, topics, description
     ↓
 Server-rendered portfolio page
     ↓
@@ -73,10 +76,11 @@ ISR cache (1 hour TTL)
 | Component | Role |
 |-----------|------|
 | **Next.js 16** | App Router, Server Components, ISR |
-| **React 19** | Zero client JS on portfolio pages |
+| **React 19** | Zero client JS on portfolio pages (except share/expand) |
 | **Tailwind CSS 4** | Dark theme, responsive layout |
 | **Vercel OG** | Dynamic social preview image generation (Satori) |
 | **GitHub API** | Profile + repos data, cached with `revalidate: 3600` |
+| **npm Registry** | Package search + download counts per maintainer |
 
 ---
 
@@ -120,14 +124,21 @@ src/
 │   └── api/og/[username]/
 │       └── route.tsx               # OG image generation (1200×630 PNG)
 ├── components/
-│   ├── profile-header.tsx          # Avatar, name, bio, stats grid
-│   ├── repo-card.tsx               # Repository card with stars, language, topics
-│   ├── language-chart.tsx          # Stacked bar + legend
+│   ├── hero-card.tsx               # Avatar, name, bio, aggregate stats + npm
+│   ├── category-section.tsx        # Auto-grouped repos with expand/collapse
+│   ├── npm-card.tsx                # npm download stats with bar chart
+│   ├── tech-stack.tsx              # Language breakdown bar + legend
+│   ├── topic-cloud.tsx             # Weighted focus areas cloud
+│   ├── activity-graph.tsx          # Project creation timeline
+│   ├── share-bar.tsx               # Share to X, LinkedIn, copy link
 │   ├── social-links.tsx            # GitHub, Twitter, LinkedIn, website
-│   ├── url-swap.tsx                # Animated URL swap (client)
-│   └── username-input.tsx          # Search input (client)
+│   ├── url-swap.tsx                # Animated URL swap (landing page)
+│   ├── username-input.tsx          # Search input (landing page)
+│   └── footer.tsx                  # Attribution
 ├── lib/
 │   ├── github.ts                   # GitHub API client with caching
+│   ├── npm.ts                      # npm registry API client
+│   ├── categorize.ts               # Smart repo categorization engine
 │   ├── types.ts                    # TypeScript interfaces
 │   └── utils.ts                    # formatNumber, timeAgo, getTopRepos
 └── proxy.ts                        # URL redirect handler
@@ -142,20 +153,6 @@ npm run dev      # Dev server → localhost:3000
 npm run build    # Production build
 npm run lint     # ESLint
 ```
-
----
-
-## How It Compares
-
-| Feature | GitShow | GitProfile | CheckMyGit | GitHubFolio |
-|---------|---------|-----------|------------|-------------|
-| URL swap (no setup) | ✅ | ❌ (fork + deploy) | ❌ (enter username) | ❌ (enter username) |
-| Central hosted URL | ✅ | ❌ | ✅ | ✅ |
-| Dynamic OG images | ✅ | ❌ | PNG export | ❌ |
-| Server-rendered (SEO) | ✅ | ✅ (static) | ❌ (client) | ❌ (client) |
-| Smart repo curation | ✅ | ❌ | ❌ | ❌ |
-| Self-hostable | ✅ | ✅ | ✅ | ❌ |
-| Mobile-first | ✅ | ✅ | ✅ | ✅ |
 
 ---
 

@@ -32,7 +32,7 @@ export function UrlSwap() {
   }, []);
 
   const username = EXAMPLES[index];
-  const domain = phase === "gitshow" ? "gitshow.me" : "github.com";
+  const domain = phase === "gitshow" ? "gitshow.dev" : "github.com";
 
   return (
     <div className="relative mx-auto max-w-lg overflow-hidden rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-mono text-sm backdrop-blur-sm md:text-base">

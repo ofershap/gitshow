@@ -15,19 +15,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GitShow — Your GitHub, beautifully shown",
   description:
-    "Replace github.com with gitshow.me in any profile URL to get a stunning developer portfolio. Open source, no signup required.",
+    "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio. Open source, no signup required.",
   openGraph: {
     title: "GitShow — Your GitHub, beautifully shown",
     description:
-      "Replace github.com with gitshow.me in any profile URL to get a stunning developer portfolio.",
+      "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
     type: "website",
-    url: "https://gitshow.vercel.app",
+    url: "https://gitshow.dev",
   },
   twitter: {
     card: "summary_large_image",
     title: "GitShow — Your GitHub, beautifully shown",
     description:
-      "Replace github.com with gitshow.me in any profile URL to get a stunning developer portfolio.",
+      "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
   },
 };
 
