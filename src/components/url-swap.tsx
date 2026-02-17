@@ -40,30 +40,39 @@ export function UrlSwap() {
   const isActive = phase === "gitshow" || phase === "swap";
 
   return (
-    <div className="relative mx-auto max-w-xl overflow-hidden rounded-2xl border border-[--color-border] bg-[--color-surface-raised] px-6 py-4 font-mono text-base backdrop-blur-sm md:text-lg">
+    <div
+      className="relative mx-auto max-w-xl overflow-hidden rounded-2xl font-mono text-base md:text-lg animate-border-glow"
+      style={{
+        background: "var(--color-surface-raised)",
+        border: "1px solid var(--color-border)",
+        padding: "18px 24px",
+      }}
+    >
       <div
-        className="absolute inset-0 opacity-0 transition-opacity duration-500"
+        className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-500"
         style={{
-          opacity: isActive ? 0.15 : 0,
-          background: "linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.2), rgba(245,158,11,0.1))",
+          opacity: isActive ? 1 : 0,
+          background: "radial-gradient(ellipse at center, rgba(20,184,166,0.06) 0%, transparent 70%)",
+          boxShadow: isActive ? "inset 0 0 40px rgba(20,184,166,0.04)" : "none",
         }}
       />
-      <div className="relative flex items-center gap-1.5 text-gray-400">
-        <span className="text-gray-600">https://</span>
+      <div className="relative flex items-center gap-1.5">
+        <span className="text-zinc-600">https://</span>
         <span
           key={flipKey}
           className={`transition-all duration-500 ${
             phase === "swap"
-              ? "animate-slot-flip text-violet-400"
+              ? "animate-slot-flip text-teal-400"
               : phase === "gitshow"
-                ? "text-violet-400 font-semibold"
-                : "text-gray-200"
+                ? "text-teal-400 font-semibold"
+                : "text-zinc-200"
           }`}
+          style={phase === "gitshow" ? { textShadow: "0 0 20px rgba(20,184,166,0.4)" } : undefined}
         >
           {domain}
         </span>
-        <span className="text-gray-600">/</span>
-        <span className="text-emerald-400">{username}</span>
+        <span className="text-zinc-600">/</span>
+        <span className="text-amber-400">{username}</span>
       </div>
     </div>
   );

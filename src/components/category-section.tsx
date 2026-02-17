@@ -8,15 +8,15 @@ interface CategorySectionProps {
   categories: RepoCategory[];
 }
 
-const CATEGORY_COLORS = [
-  "border-l-violet-500",
-  "border-l-cyan-500",
-  "border-l-amber-500",
-  "border-l-pink-500",
-  "border-l-green-500",
-  "border-l-blue-500",
-  "border-l-red-500",
-  "border-l-indigo-500",
+const CATEGORY_ACCENTS = [
+  { border: "#14b8a6", bg: "rgba(20, 184, 166, 0.06)" },
+  { border: "#06b6d4", bg: "rgba(6, 182, 212, 0.06)" },
+  { border: "#f59e0b", bg: "rgba(245, 158, 11, 0.06)" },
+  { border: "#10b981", bg: "rgba(16, 185, 129, 0.06)" },
+  { border: "#3b82f6", bg: "rgba(59, 130, 246, 0.06)" },
+  { border: "#ef4444", bg: "rgba(239, 68, 68, 0.06)" },
+  { border: "#f97316", bg: "rgba(249, 115, 22, 0.06)" },
+  { border: "#0ea5e9", bg: "rgba(14, 165, 233, 0.06)" },
 ];
 
 function RepoRow({ repo }: { repo: GitHubRepo }) {
@@ -25,21 +25,21 @@ function RepoRow({ repo }: { repo: GitHubRepo }) {
       href={repo.html_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-start gap-3 rounded-xl border border-transparent p-3 transition-all hover:border-[--color-border-hover] hover:bg-[--color-surface-hover]"
+      className="group flex items-start gap-3 rounded-xl p-3 transition-all hover:bg-white/[0.03]"
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-display font-semibold text-white group-hover:text-violet-400 transition-colors truncate">
+          <span className="font-display font-semibold text-white group-hover:text-teal-400 transition-colors truncate">
             {repo.name}
           </span>
           {repo.language && (
-            <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] text-gray-400">
+            <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] text-zinc-400">
               {repo.language}
             </span>
           )}
         </div>
         {repo.description && (
-          <p className="mt-1 text-sm text-gray-400 line-clamp-1">
+          <p className="mt-1 text-sm text-zinc-400 line-clamp-1">
             {repo.description}
           </p>
         )}
@@ -48,7 +48,7 @@ function RepoRow({ repo }: { repo: GitHubRepo }) {
             {repo.topics.slice(0, 4).map((t) => (
               <span
                 key={t}
-                className="rounded-md bg-violet-500/10 px-1.5 py-0.5 text-[10px] text-violet-300/80"
+                className="rounded-md bg-teal-500/10 px-1.5 py-0.5 text-[10px] text-teal-300/80"
               >
                 {t}
               </span>
@@ -56,7 +56,7 @@ function RepoRow({ repo }: { repo: GitHubRepo }) {
           </div>
         )}
       </div>
-      <div className="flex shrink-0 items-center gap-3 text-xs text-gray-500">
+      <div className="flex shrink-0 items-center gap-3 text-xs text-zinc-500">
         {repo.stargazers_count > 0 && (
           <span className="flex items-center gap-1">
             ⭐ {formatNumber(repo.stargazers_count)}
@@ -81,25 +81,41 @@ export function CategorySection({ categories }: CategorySectionProps) {
           const isExpanded = expandedCategory === cat.label;
           const visibleRepos = isExpanded ? cat.repos : cat.repos.slice(0, 3);
           const hasMore = cat.repos.length > 3;
-          const colorClass = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+          const accent = CATEGORY_ACCENTS[i % CATEGORY_ACCENTS.length];
 
           return (
             <div
               key={cat.label}
-              className={`card-hover overflow-hidden rounded-2xl border border-[--color-border] border-l-[3px] bg-[--color-surface-raised] ${colorClass}`}
+              className="card-hover overflow-hidden rounded-2xl"
+              style={{
+                background: "var(--color-surface-raised)",
+                borderLeft: `3px solid ${accent.border}`,
+                border: `1px solid var(--color-border)`,
+                borderLeftWidth: "3px",
+                borderLeftColor: accent.border,
+              }}
             >
-              <div className="flex items-center justify-between px-5 py-3 border-b border-[--color-border]">
+              <div
+                className="flex items-center justify-between px-5 py-3"
+                style={{ borderBottom: "1px solid var(--color-border)" }}
+              >
                 <div className="flex items-center gap-2.5">
                   <span className="text-xl">{cat.emoji}</span>
                   <span className="font-display font-medium text-white">{cat.label}</span>
-                  <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] tabular-nums text-gray-400">
+                  <span
+                    className="rounded-full px-2.5 py-0.5 text-[11px] tabular-nums text-zinc-400"
+                    style={{ background: accent.bg }}
+                  >
                     {cat.repos.length}
                   </span>
                 </div>
               </div>
-              <div className="divide-y divide-[--color-border] px-2 py-1">
-                {visibleRepos.map((repo) => (
-                  <RepoRow key={repo.name} repo={repo} />
+              <div className="px-2 py-1">
+                {visibleRepos.map((repo, j) => (
+                  <div key={repo.name}>
+                    {j > 0 && <div style={{ borderTop: "1px solid var(--color-border)" }} />}
+                    <RepoRow repo={repo} />
+                  </div>
                 ))}
               </div>
               {hasMore && (
@@ -107,7 +123,8 @@ export function CategorySection({ categories }: CategorySectionProps) {
                   onClick={() =>
                     setExpandedCategory(isExpanded ? null : cat.label)
                   }
-                  className="w-full border-t border-[--color-border] py-2.5 text-center text-xs font-medium text-gray-500 transition-colors hover:bg-[--color-surface-hover] hover:text-violet-400"
+                  className="w-full py-2.5 text-center text-xs font-medium text-zinc-500 transition-colors hover:text-teal-400"
+                  style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)" }}
                 >
                   {isExpanded
                     ? "Show less"

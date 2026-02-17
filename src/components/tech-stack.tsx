@@ -9,10 +9,10 @@ export function TechStack({ languages }: TechStackProps) {
   const totalPercentage = top.reduce((s, l) => s + l.percentage, 0);
 
   return (
-    <div className="card-hover rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+    <div className="card-hover rounded-2xl p-5" style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}>
       <h3 className="font-display font-semibold text-white mb-4">Tech Stack</h3>
 
-      <div className="h-3.5 rounded-full bg-white/[0.04] overflow-hidden flex">
+      <div className="h-3.5 rounded-full overflow-hidden flex" style={{ background: "rgba(255,255,255,0.04)" }}>
         {top.map((lang) => (
           <div
             key={lang.name}
@@ -30,8 +30,8 @@ export function TechStack({ languages }: TechStackProps) {
         {top.map((lang) => (
           <div key={lang.name} className="flex items-center gap-2 text-sm">
             <span
-              className="h-3 w-3 rounded-full shrink-0 ring-1 ring-white/10"
-              style={{ backgroundColor: lang.color }}
+              className="h-3 w-3 rounded-full shrink-0"
+              style={{ backgroundColor: lang.color, boxShadow: `0 0 8px ${lang.color}40` }}
             />
             <span className="text-gray-300 truncate">{lang.name}</span>
             <span className="ml-auto font-mono text-xs tabular-nums text-gray-500">

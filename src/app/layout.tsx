@@ -55,9 +55,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" style={{ colorScheme: "dark" }}>
       <body
-        className={`${dmSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} relative min-h-screen bg-[--color-surface] font-sans text-white antialiased`}
+        className={`${dmSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} relative min-h-screen font-sans antialiased`}
+        style={{ backgroundColor: "var(--color-surface)", color: "#e2e8f0" }}
       >
         {children}
       </body>

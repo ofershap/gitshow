@@ -10,10 +10,13 @@ export function NpmCard({ stats }: NpmCardProps) {
   const topPackages = stats.packages.slice(0, 8);
 
   return (
-    <div className="card-hover overflow-hidden rounded-2xl border border-[--color-border] bg-[--color-surface-raised]">
-      <div className="flex items-center justify-between border-b border-[--color-border] px-5 py-3">
+    <div className="card-hover overflow-hidden rounded-2xl" style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}>
+      <div
+        className="flex items-center justify-between px-5 py-3"
+        style={{ borderBottom: "1px solid var(--color-border)" }}
+      >
         <h3 className="font-display font-semibold text-white flex items-center gap-2">
-          <span className="text-red-400">npm</span> Packages
+          <span className="text-red-400 font-bold">npm</span> Packages
         </h3>
         <div className="text-right">
           <div className="font-display text-lg font-bold text-white">
@@ -42,10 +45,13 @@ export function NpmCard({ stats }: NpmCardProps) {
                   {formatNumber(pkg.downloads)}
                 </span>
               </div>
-              <div className="mt-1 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+              <div className="mt-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-red-500/70 to-rose-400/50 transition-all group-hover:from-red-500 group-hover:to-rose-400"
-                  style={{ width: `${width}%` }}
+                  className="h-full rounded-full transition-all group-hover:brightness-125"
+                  style={{
+                    width: `${width}%`,
+                    background: "linear-gradient(90deg, rgba(239,68,68,0.7), rgba(244,63,94,0.5))",
+                  }}
                 />
               </div>
             </a>
@@ -54,7 +60,10 @@ export function NpmCard({ stats }: NpmCardProps) {
       </div>
 
       {stats.packages.length > 8 && (
-        <div className="border-t border-[--color-border] py-2.5 text-center text-[11px] text-gray-500">
+        <div
+          className="py-2.5 text-center text-[11px] text-gray-500"
+          style={{ borderTop: "1px solid var(--color-border)" }}
+        >
           +{stats.packages.length - 8} more packages
         </div>
       )}

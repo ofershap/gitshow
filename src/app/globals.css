@@ -4,62 +4,53 @@
   --font-sans: var(--font-dm-sans);
   --font-display: var(--font-space-grotesk);
   --font-mono: var(--font-jetbrains-mono);
+}
 
-  --color-surface: #0c0c18;
-  --color-surface-raised: #13132a;
-  --color-surface-hover: #1a1a3a;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.16);
+:root {
+  color-scheme: dark;
 
-  --color-accent-violet: #8b5cf6;
-  --color-accent-blue: #3b82f6;
-  --color-accent-cyan: #06b6d4;
-  --color-accent-green: #10b981;
-  --color-accent-lime: #84cc16;
-  --color-accent-amber: #f59e0b;
-  --color-accent-orange: #f97316;
-  --color-accent-red: #ef4444;
-  --color-accent-pink: #ec4899;
-  --color-accent-rose: #f43f5e;
+  --color-surface: #09090b;
+  --color-surface-raised: #111113;
+  --color-surface-hover: #1a1a1e;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-hover: rgba(255, 255, 255, 0.14);
+
+  --accent: #14b8a6;
+  --accent-glow: rgba(20, 184, 166, 0.15);
+  --accent-soft: rgba(20, 184, 166, 0.08);
+  --warm: #f59e0b;
+  --warm-glow: rgba(245, 158, 11, 0.15);
 }
 
 ::selection {
-  background-color: rgba(139, 92, 246, 0.3);
+  background-color: rgba(20, 184, 166, 0.35);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); }
+
+html, body {
+  background-color: var(--color-surface);
+  color: #d4d4d8;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-
-body {
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(59, 130, 246, 0.06), transparent),
-    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(236, 72, 153, 0.05), transparent);
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -20%, rgba(20, 184, 166, 0.10), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 90% 60%, rgba(245, 158, 11, 0.05), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 10% 80%, rgba(59, 130, 246, 0.04), transparent 60%);
+  pointer-events: none;
 }
 
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes fade-in {
@@ -72,67 +63,64 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
-  70% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(20, 184, 166, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(20, 184, 166, 0.25), 0 0 80px rgba(245, 158, 11, 0.08); }
 }
 
 @keyframes slot-flip {
   0% { transform: translateY(0); opacity: 1; }
-  30% { transform: translateY(-100%); opacity: 0; }
-  31% { transform: translateY(100%); opacity: 0; }
+  25% { transform: translateY(-120%); opacity: 0; }
+  26% { transform: translateY(120%); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
-.animate-fade-up {
-  animation: fade-up 0.5s ease-out both;
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(20, 184, 166, 0.12); }
+  50% { border-color: rgba(20, 184, 166, 0.28); }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out both;
-}
+.animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fade-in 0.5s ease-out both; }
+.animate-gradient { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-slot-flip { animation: slot-flip 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+.animate-border-glow { animation: border-glow 3s ease-in-out infinite; }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 6s ease infinite;
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 2s ease-in-out infinite;
-}
-
-.animate-slot-flip {
-  animation: slot-flip 0.5s ease-in-out;
-}
-
-.stagger-1 { animation-delay: 50ms; }
-.stagger-2 { animation-delay: 100ms; }
-.stagger-3 { animation-delay: 150ms; }
-.stagger-4 { animation-delay: 200ms; }
-.stagger-5 { animation-delay: 250ms; }
-.stagger-6 { animation-delay: 300ms; }
-.stagger-7 { animation-delay: 350ms; }
-.stagger-8 { animation-delay: 400ms; }
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 160ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 320ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 480ms; }
+.stagger-7 { animation-delay: 560ms; }
+.stagger-8 { animation-delay: 640ms; }
 
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 .card-hover:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-.noise::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  border-radius: inherit;
+.glass {
+  background: rgba(17, 17, 19, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glow-accent {
+  box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(20, 184, 166, 0.04);
+}
+
+.text-glow {
+  text-shadow: 0 0 40px rgba(20, 184, 166, 0.4), 0 0 80px rgba(245, 158, 11, 0.15);
 }

@@ -22,7 +22,7 @@ export async function GET(
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "linear-gradient(135deg, #0c0c18 0%, #1a1a3a 40%, #13132a 70%, #0c0c18 100%)",
+          background: "linear-gradient(135deg, #09090b 0%, #111113 40%, #0d1117 70%, #09090b 100%)",
           padding: "50px",
           fontFamily: "system-ui, sans-serif",
           position: "relative",
@@ -37,7 +37,7 @@ export async function GET(
             width: "400px",
             height: "400px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%)",
           }}
         />
         <div
@@ -48,7 +48,7 @@ export async function GET(
             width: "300px",
             height: "300px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%)",
           }}
         />
 
@@ -68,8 +68,8 @@ export async function GET(
             height={110}
             style={{
               borderRadius: "22px",
-              border: "3px solid rgba(139,92,246,0.3)",
-              boxShadow: "0 0 30px rgba(139,92,246,0.15)",
+              border: "3px solid rgba(20,184,166,0.3)",
+              boxShadow: "0 0 30px rgba(20,184,166,0.12)",
             }}
           />
           <div
@@ -88,7 +88,7 @@ export async function GET(
             >
               {user.name ?? user.login}
             </span>
-            <span style={{ fontSize: "18px", color: "#8b5cf6" }}>
+            <span style={{ fontSize: "18px", color: "#14b8a6" }}>
               @{user.login}
             </span>
           </div>
@@ -102,9 +102,9 @@ export async function GET(
             position: "relative",
           }}
         >
-          <StatBox value={repos.length.toString()} label="Projects" color="#8b5cf6" />
+          <StatBox value={repos.length.toString()} label="Projects" color="#14b8a6" />
           <StatBox value={fmtNum(totalStars)} label="Stars" color="#f59e0b" />
-          <StatBox value={fmtNum(user.followers)} label="Followers" color="#ec4899" />
+          <StatBox value={fmtNum(user.followers)} label="Followers" color="#10b981" />
           {npmStats && npmStats.totalDownloads > 0 ? (
             <StatBox value={fmtNum(npmStats.totalDownloads)} label="npm dl/mo" color="#ef4444" />
           ) : null}
@@ -118,10 +118,10 @@ export async function GET(
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                background: "rgba(139,92,246,0.08)",
+                background: "rgba(20,184,166,0.08)",
                 borderRadius: "14px",
                 padding: "8px 16px",
-                border: "1px solid rgba(139,92,246,0.15)",
+                border: "1px solid rgba(20,184,166,0.12)",
               }}
             >
               <span style={{ fontSize: "16px" }}>{cat.emoji}</span>
@@ -179,7 +179,7 @@ export async function GET(
             style={{
               fontSize: "24px",
               fontWeight: 700,
-              background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
+              background: "linear-gradient(135deg, #14b8a6, #f59e0b)",
               backgroundClip: "text",
               color: "transparent",
             }}

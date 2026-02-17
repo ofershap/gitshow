@@ -23,13 +23,14 @@ export function ShareBar({ user }: ShareBarProps) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="font-display text-sm font-medium text-gray-400">Share this portfolio</p>
+      <p className="font-display text-sm font-medium text-zinc-400">Share this portfolio</p>
       <div className="flex items-center gap-3">
         <a
           href={twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-blue-500/30 hover:text-blue-300"
+          className="card-hover rounded-xl px-5 py-2.5 text-sm text-zinc-300 transition-all hover:text-white"
+          style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}
         >
           Share on 𝕏
         </a>
@@ -37,17 +38,19 @@ export function ShareBar({ user }: ShareBarProps) {
           href={linkedinUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-blue-600/30 hover:text-blue-300"
+          className="card-hover rounded-xl px-5 py-2.5 text-sm text-zinc-300 transition-all hover:text-white"
+          style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}
         >
           Share on LinkedIn
         </a>
         <button
           onClick={handleCopy}
-          className="card-hover rounded-xl border border-[--color-border] bg-[--color-surface-raised] px-5 py-2.5 text-sm text-gray-300 transition-all hover:border-violet-500/30 hover:text-violet-300"
+          className="card-hover rounded-xl px-5 py-2.5 text-sm text-zinc-300 transition-all hover:text-white"
+          style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}
         >
           {copied ? (
-            <span className="flex items-center gap-1.5">
-              <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               Copied!

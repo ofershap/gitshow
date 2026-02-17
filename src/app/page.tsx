@@ -4,106 +4,142 @@ import { Footer } from "@/components/footer";
 import Link from "next/link";
 
 const FEATURED = [
-  { username: "torvalds", label: "Linus Torvalds", desc: "Creator of Linux & Git", color: "from-amber-500/20 to-amber-500/5 border-amber-500/20" },
-  { username: "sindresorhus", label: "Sindre Sorhus", desc: "1000+ npm packages", color: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/20" },
-  { username: "tj", label: "TJ Holowaychuk", desc: "Creator of Express.js", color: "from-green-500/20 to-green-500/5 border-green-500/20" },
-];
-
-const FEATURES = [
-  {
-    title: "Instant",
-    description: "No signup. No config. Just a username and a stunning portfolio in seconds.",
-    icon: "⚡",
-    color: "from-amber-500/20 to-amber-500/5 border-amber-500/20 hover:shadow-amber-500/10",
-  },
-  {
-    title: "Shareable",
-    description: "Stunning social preview cards for Twitter & LinkedIn. Share your work proudly.",
-    icon: "🔗",
-    color: "from-violet-500/20 to-violet-500/5 border-violet-500/20 hover:shadow-violet-500/10",
-  },
-  {
-    title: "Open Source",
-    description: "Free forever. Self-host it, fork it, contribute. MIT licensed.",
-    icon: "💜",
-    color: "from-pink-500/20 to-pink-500/5 border-pink-500/20 hover:shadow-pink-500/10",
-  },
+  { username: "torvalds", label: "Linus Torvalds", desc: "Creator of Linux & Git", emoji: "🐧" },
+  { username: "sindresorhus", label: "Sindre Sorhus", desc: "1000+ npm packages", emoji: "🦄" },
+  { username: "tj", label: "TJ Holowaychuk", desc: "Creator of Express.js", emoji: "⚡" },
 ];
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center px-4 py-24">
-        <div className="animate-fade-up mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-xs font-medium text-violet-300">
-          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
-          Open Source &middot; Free Forever
+    <main className="flex min-h-screen flex-col overflow-hidden">
+      {/* Hero */}
+      <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-28 md:py-36">
+        {/* Background orbs — teal + warm amber */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-1/2 top-0 h-[600px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/15 blur-[120px]" />
+          <div className="absolute bottom-0 left-0 h-[400px] w-[600px] -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-500/8 blur-[100px]" />
+          <div className="absolute bottom-1/4 right-0 h-[350px] w-[500px] translate-x-1/4 rounded-full bg-sky-500/6 blur-[100px]" />
         </div>
 
-        <h1 className="animate-fade-up stagger-1 mb-6 text-center font-display text-5xl font-bold tracking-tight text-white md:text-7xl lg:text-8xl">
-          Your GitHub,{" "}
-          <span className="animate-gradient bg-gradient-to-r from-violet-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">
-            way cooler
-          </span>
-        </h1>
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="animate-fade-up mb-6 inline-flex items-center gap-2.5 rounded-full border border-teal-500/20 bg-teal-500/[0.08] px-5 py-2 text-sm font-medium text-teal-300 animate-border-glow">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+            Open Source &middot; Free Forever
+          </div>
 
-        <p className="animate-fade-up stagger-2 mb-10 max-w-xl text-center text-lg leading-relaxed text-gray-400 md:text-xl">
-          Replace{" "}
-          <code className="rounded-md bg-white/[0.06] px-2 py-1 font-mono text-sm text-gray-300">
-            github.com
-          </code>{" "}
-          with{" "}
-          <code className="rounded-md bg-violet-500/15 px-2 py-1 font-mono text-sm text-violet-300">
-            gitshow.me
-          </code>{" "}
-          in any profile URL.
-        </p>
+          <h1 className="animate-fade-up stagger-1 mb-8 max-w-4xl text-center font-display text-6xl font-bold tracking-tight md:text-8xl lg:text-9xl">
+            <span className="text-white text-glow">Your GitHub,</span>
+            <br />
+            <span className="animate-gradient bg-gradient-to-r from-teal-400 via-emerald-300 via-50% to-amber-400 bg-clip-text text-transparent">
+              way cooler.
+            </span>
+          </h1>
 
-        <div className="animate-fade-up stagger-3 mb-8 w-full max-w-xl">
-          <UrlSwap />
+          <p className="animate-fade-up stagger-2 mb-12 max-w-lg text-center text-lg leading-relaxed text-zinc-400 md:text-xl">
+            Swap{" "}
+            <code className="rounded-lg bg-white/[0.06] px-2.5 py-1 font-mono text-[0.9em] text-zinc-300">
+              github.com
+            </code>{" "}
+            for{" "}
+            <code className="rounded-lg bg-teal-500/15 px-2.5 py-1 font-mono text-[0.9em] text-teal-300 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+              gitshow.me
+            </code>{" "}
+            — that&apos;s it.
+          </p>
+
+          <div className="animate-fade-up stagger-3 mb-6 w-full max-w-xl">
+            <UrlSwap />
+          </div>
+
+          <div className="animate-fade-up stagger-4 mb-4">
+            <UsernameInput />
+          </div>
+
+          <p className="animate-fade-up stagger-4 mt-2 text-xs text-zinc-600">
+            No signup required. Works with any public GitHub profile.
+          </p>
         </div>
 
-        <div className="animate-fade-up stagger-4">
-          <UsernameInput />
-        </div>
-
-        <div className="mt-20 w-full max-w-3xl animate-fade-up stagger-5">
-          <p className="mb-5 text-center font-display text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-            Try these profiles
+        {/* Featured profiles */}
+        <div className="relative z-10 mt-24 w-full max-w-2xl animate-fade-up stagger-5">
+          <p className="mb-6 text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">
+            See it in action
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {FEATURED.map((profile) => (
               <Link
                 key={profile.username}
                 href={`/${profile.username}`}
-                className={`card-hover group relative overflow-hidden rounded-2xl border bg-gradient-to-br p-5 text-center backdrop-blur-sm ${profile.color}`}
+                className="card-hover group glass rounded-2xl p-5 text-center"
               >
-                <div className="font-display text-base font-semibold text-white group-hover:text-violet-300 transition-colors">
+                <div className="mb-2 text-2xl">{profile.emoji}</div>
+                <div className="font-display text-sm font-semibold text-white group-hover:text-teal-300 transition-colors">
                   {profile.label}
                 </div>
-                <div className="mt-1 font-mono text-xs text-gray-500">
+                <div className="mt-0.5 font-mono text-[11px] text-zinc-500">
                   @{profile.username}
                 </div>
-                <div className="mt-2 text-xs text-gray-400">{profile.desc}</div>
+                <div className="mt-2 text-xs text-zinc-400">{profile.desc}</div>
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="mt-20 grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-3 animate-fade-up stagger-6">
-          {FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className={`card-hover relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6 text-center backdrop-blur-sm ${feature.color} hover:shadow-lg`}
-            >
-              <div className="mb-3 text-3xl">{feature.icon}</div>
-              <h3 className="font-display text-base font-semibold text-white">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-400">{feature.description}</p>
-            </div>
-          ))}
+        {/* Features */}
+        <div className="relative z-10 mt-28 w-full max-w-4xl animate-fade-up stagger-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <FeatureCard
+              icon="⚡"
+              title="Instant"
+              description="No signup. No config. Just a username and a stunning portfolio in seconds."
+              gradient="from-amber-500/10 via-amber-500/5 to-transparent"
+              glow="hover:shadow-[0_0_60px_rgba(245,158,11,0.1)]"
+            />
+            <FeatureCard
+              icon="🔗"
+              title="Shareable"
+              description="Beautiful social preview cards for Twitter & LinkedIn. Share your work proudly."
+              gradient="from-teal-500/10 via-teal-500/5 to-transparent"
+              glow="hover:shadow-[0_0_60px_rgba(20,184,166,0.1)]"
+            />
+            <FeatureCard
+              icon="🌿"
+              title="Open Source"
+              description="Free forever. Self-host it, fork it, contribute. MIT licensed."
+              gradient="from-emerald-500/10 via-emerald-500/5 to-transparent"
+              glow="hover:shadow-[0_0_60px_rgba(16,185,129,0.1)]"
+            />
+          </div>
         </div>
       </div>
 
       <Footer />
     </main>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+  gradient,
+  glow,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  gradient: string;
+  glow: string;
+}) {
+  return (
+    <div
+      className={`card-hover glass rounded-2xl p-7 text-center transition-shadow ${glow}`}
+    >
+      <div className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-2xl`}>
+        {icon}
+      </div>
+      <h3 className="font-display text-base font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{description}</p>
+    </div>
   );
 }

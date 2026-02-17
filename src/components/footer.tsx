@@ -1,24 +1,24 @@
 export function Footer() {
   return (
-    <footer className="mt-12 border-t border-[--color-border] py-8 text-center">
-      <p className="text-sm text-gray-500">
+    <footer className="mt-16 py-8 text-center" style={{ borderTop: "1px solid var(--color-border)" }}>
+      <p className="text-sm text-zinc-500">
         Built with{" "}
         <a
           href="https://github.com/ofershap/gitshow"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-display font-semibold text-violet-400/80 transition-colors hover:text-violet-300"
+          className="font-display font-semibold text-teal-400/80 transition-colors hover:text-teal-300"
         >
           GitShow
         </a>
       </p>
-      <p className="mt-2 text-xs text-gray-600">
+      <p className="mt-2 text-xs text-zinc-600">
         Replace{" "}
-        <code className="rounded bg-white/[0.04] px-1.5 py-0.5 font-mono text-gray-500">
+        <code className="rounded px-1.5 py-0.5 font-mono text-zinc-500" style={{ background: "rgba(255,255,255,0.04)" }}>
           github.com
         </code>{" "}
         with{" "}
-        <code className="rounded bg-violet-500/10 px-1.5 py-0.5 font-mono text-violet-400/70">
+        <code className="rounded px-1.5 py-0.5 font-mono text-teal-400/60" style={{ background: "rgba(20,184,166,0.08)" }}>
           gitshow.me
         </code>{" "}
         in any profile URL
