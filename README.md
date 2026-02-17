@@ -15,6 +15,8 @@ Replace `github.com` with `gitshow.dev` in any profile URL. No signup, no config
 
 > Inspired by [GitMCP](https://gitmcp.io) — same URL-swap pattern, but for developer portfolios instead of AI context.
 
+![GitShow Preview](assets/preview.png)
+
 ---
 
 ## See It In Action
