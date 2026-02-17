@@ -1,4 +1,11 @@
-import { GitHubUser, GitHubRepo, LanguageStats, ProfileData } from "./types";
+import {
+  GitHubUser,
+  GitHubRepo,
+  LanguageStats,
+  ProfileData,
+} from "./types";
+import { fetchNpmStats } from "./npm";
+import { categorizeRepos } from "./categorize";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -100,6 +107,37 @@ function computeLanguages(repos: GitHubRepo[]): LanguageStats[] {
     .sort((a, b) => b.count - a.count);
 }
 
+function computeTopTopics(
+  repos: GitHubRepo[]
+): { name: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const repo of repos) {
+    for (const topic of repo.topics) {
+      counts.set(topic, (counts.get(topic) ?? 0) + 1);
+    }
+  }
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, count }))
+    .filter((t) => t.count >= 2)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 12);
+}
+
+function computeTimeline(
+  repos: GitHubRepo[]
+): { month: string; count: number }[] {
+  const months = new Map<string, number>();
+  for (const repo of repos) {
+    const d = new Date(repo.created_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    months.set(key, (months.get(key) ?? 0) + 1);
+  }
+  return Array.from(months.entries())
+    .map(([month, count]) => ({ month, count }))
+    .sort((a, b) => a.month.localeCompare(b.month))
+    .slice(-12);
+}
+
 export async function fetchProfile(username: string): Promise<ProfileData> {
   const [user, repos] = await Promise.all([
     githubFetch<GitHubUser>(`/users/${username}`),
@@ -116,12 +154,21 @@ export async function fetchProfile(username: string): Promise<ProfileData> {
   );
   const totalForks = publicRepos.reduce((sum, r) => sum + r.forks_count, 0);
   const languages = computeLanguages(publicRepos);
+  const categories = categorizeRepos(publicRepos);
+  const topTopics = computeTopTopics(publicRepos);
+  const activityTimeline = computeTimeline(publicRepos);
+
+  const npmStats = await fetchNpmStats(username).catch(() => null);
 
   return {
     user,
     repos: publicRepos,
     languages,
+    categories,
     totalStars,
     totalForks,
+    npmStats,
+    topTopics,
+    activityTimeline,
   };
 }

@@ -37,10 +37,25 @@ export interface LanguageStats {
   color: string;
 }
 
+export interface RepoCategory {
+  label: string;
+  emoji: string;
+  repos: GitHubRepo[];
+}
+
+export interface NpmStats {
+  totalDownloads: number;
+  packages: { name: string; downloads: number }[];
+}
+
 export interface ProfileData {
   user: GitHubUser;
   repos: GitHubRepo[];
   languages: LanguageStats[];
+  categories: RepoCategory[];
   totalStars: number;
   totalForks: number;
+  npmStats: NpmStats | null;
+  topTopics: { name: string; count: number }[];
+  activityTimeline: { month: string; count: number }[];
 }

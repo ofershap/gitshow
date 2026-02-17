@@ -11,8 +11,9 @@ export async function GET(
 
   try {
     const data = await fetchProfile(username);
-    const { user, totalStars, languages } = data;
-    const topLangs = languages.slice(0, 5);
+    const { user, totalStars, repos, languages, categories, npmStats } = data;
+    const topLangs = languages.slice(0, 4);
+    const topCategories = categories.slice(0, 4);
 
     return new ImageResponse(
       <div
@@ -22,8 +23,8 @@ export async function GET(
           display: "flex",
           flexDirection: "column",
           background:
-            "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%)",
-          padding: "60px",
+            "linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%)",
+          padding: "50px",
           fontFamily: "system-ui, sans-serif",
         }}
       >
@@ -31,18 +32,18 @@ export async function GET(
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "30px",
+            gap: "24px",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={user.avatar_url}
             alt=""
-            width={120}
-            height={120}
+            width={100}
+            height={100}
             style={{
-              borderRadius: "60px",
-              border: "3px solid rgba(255,255,255,0.2)",
+              borderRadius: "20px",
+              border: "3px solid rgba(255,255,255,0.15)",
             }}
           />
           <div
@@ -53,93 +54,115 @@ export async function GET(
           >
             <span
               style={{
-                fontSize: "42px",
+                fontSize: "38px",
                 fontWeight: 700,
                 color: "#ffffff",
               }}
             >
               {user.name ?? user.login}
             </span>
-            <span style={{ fontSize: "22px", color: "#60a5fa" }}>
+            <span style={{ fontSize: "18px", color: "#60a5fa" }}>
               @{user.login}
             </span>
           </div>
         </div>
 
-        {user.bio ? (
-          <span
-            style={{
-              fontSize: "20px",
-              color: "#9ca3af",
-              marginTop: "24px",
-              lineHeight: 1.4,
-            }}
-          >
-            {user.bio.length > 120
-              ? user.bio.slice(0, 120) + "..."
-              : user.bio}
-          </span>
-        ) : null}
-
         <div
           style={{
             display: "flex",
-            gap: "40px",
-            marginTop: "32px",
+            gap: "30px",
+            marginTop: "28px",
           }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
-              style={{ fontSize: "32px", fontWeight: 700, color: "#ffffff" }}
+              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
             >
-              {fmtNum(user.public_repos)}
+              {repos.length}
             </span>
-            <span style={{ fontSize: "14px", color: "#6b7280" }}>Repos</span>
+            <span style={{ fontSize: "12px", color: "#6b7280" }}>Projects</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
-              style={{ fontSize: "32px", fontWeight: 700, color: "#ffffff" }}
+              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
             >
               {fmtNum(totalStars)}
             </span>
-            <span style={{ fontSize: "14px", color: "#6b7280" }}>Stars</span>
+            <span style={{ fontSize: "12px", color: "#6b7280" }}>Stars</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
-              style={{ fontSize: "32px", fontWeight: 700, color: "#ffffff" }}
+              style={{ fontSize: "28px", fontWeight: 700, color: "#ffffff" }}
             >
               {fmtNum(user.followers)}
             </span>
-            <span style={{ fontSize: "14px", color: "#6b7280" }}>
+            <span style={{ fontSize: "12px", color: "#6b7280" }}>
               Followers
             </span>
           </div>
+          {npmStats && npmStats.totalDownloads > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span
+                style={{ fontSize: "28px", fontWeight: 700, color: "#ef4444" }}
+              >
+                {fmtNum(npmStats.totalDownloads)}
+              </span>
+              <span style={{ fontSize: "12px", color: "#6b7280" }}>
+                npm dl/mo
+              </span>
+            </div>
+          ) : null}
+        </div>
+
+        <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>
+          {topCategories.map((cat) => (
+            <div
+              key={cat.label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "rgba(255,255,255,0.06)",
+                borderRadius: "12px",
+                padding: "6px 14px",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <span style={{ fontSize: "16px" }}>{cat.emoji}</span>
+              <span style={{ fontSize: "14px", color: "#d1d5db" }}>
+                {cat.label}
+              </span>
+              <span style={{ fontSize: "12px", color: "#6b7280" }}>
+                {cat.repos.length}
+              </span>
+            </div>
+          ))}
         </div>
 
         {topLangs.length > 0 ? (
-          <div style={{ display: "flex", gap: "12px", marginTop: "32px" }}>
+          <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
             {topLangs.map((lang) => (
               <div
                 key={lang.name}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
-                  background: "rgba(255,255,255,0.08)",
-                  borderRadius: "20px",
-                  padding: "8px 16px",
+                  gap: "6px",
+                  background: "rgba(255,255,255,0.04)",
+                  borderRadius: "12px",
+                  padding: "6px 14px",
                 }}
               >
                 <div
                   style={{
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "5px",
+                    width: "8px",
+                    height: "8px",
+                    borderRadius: "4px",
                     background: lang.color,
                   }}
                 />
-                <span style={{ fontSize: "16px", color: "#d1d5db" }}>
-                  {lang.name}
+                <span style={{ fontSize: "14px", color: "#9ca3af" }}>
+                  {lang.name} {lang.percentage}%
                 </span>
               </div>
             ))}
@@ -156,15 +179,15 @@ export async function GET(
         >
           <span
             style={{
-              fontSize: "24px",
+              fontSize: "22px",
               fontWeight: 700,
               color: "#60a5fa",
             }}
           >
             GitShow
           </span>
-          <span style={{ fontSize: "16px", color: "#6b7280" }}>
-            gitshow.me/{user.login}
+          <span style={{ fontSize: "15px", color: "#6b7280" }}>
+            gitshow.vercel.app/{user.login}
           </span>
         </div>
       </div>,
@@ -182,6 +205,7 @@ export async function GET(
 }
 
 function fmtNum(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return n.toString();
 }

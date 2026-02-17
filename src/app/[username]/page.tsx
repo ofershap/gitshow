@@ -1,10 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchProfile, NotFoundError } from "@/lib/github";
-import { getTopRepos } from "@/lib/utils";
-import { ProfileHeader } from "@/components/profile-header";
-import { RepoCard } from "@/components/repo-card";
-import { LanguageChart } from "@/components/language-chart";
+import { fetchProfile, NotFoundError, RateLimitError } from "@/lib/github";
+import { HeroCard } from "@/components/hero-card";
+import { CategorySection } from "@/components/category-section";
+import { NpmCard } from "@/components/npm-card";
+import { TechStack } from "@/components/tech-stack";
+import { TopicCloud } from "@/components/topic-cloud";
+import { ActivityGraph } from "@/components/activity-graph";
+import { ShareBar } from "@/components/share-bar";
 import { SocialLinks } from "@/components/social-links";
 import { Footer } from "@/components/footer";
 
@@ -20,106 +23,88 @@ export async function generateMetadata({
   const { username } = await params;
 
   try {
-    const data = await fetchProfile(username);
-    const title = data.user.name
-      ? `${data.user.name} (@${username})`
-      : `@${username}`;
-    const description =
-      data.user.bio ??
-      `${data.user.public_repos} repos, ${data.totalStars} stars`;
+    const { user, totalStars, repos } = await fetchProfile(username);
+    const title = `${user.name ?? user.login} — GitShow`;
+    const description = `${repos.length} open source projects · ${totalStars} stars${user.bio ? ` · ${user.bio}` : ""}`;
 
     return {
-      title: `${title} — GitShow`,
+      title,
       description,
       openGraph: {
-        title: `${title} — GitShow`,
+        title,
         description,
         images: [`/api/og/${username}`],
         type: "profile",
-        url: `/${username}`,
       },
       twitter: {
         card: "summary_large_image",
-        title: `${title} — GitShow`,
+        title,
         description,
         images: [`/api/og/${username}`],
       },
     };
   } catch {
-    return {
-      title: `@${username} — GitShow`,
-    };
+    return { title: `${username} — GitShow` };
   }
 }
 
 export default async function ProfilePage({ params }: PageProps) {
   const { username } = await params;
 
-  let data;
   try {
-    data = await fetchProfile(username);
-  } catch (error) {
-    if (error instanceof NotFoundError) notFound();
-    throw error;
-  }
+    const data = await fetchProfile(username);
+    const {
+      user,
+      repos,
+      languages,
+      categories,
+      totalStars,
+      totalForks,
+      npmStats,
+      topTopics,
+      activityTimeline,
+    } = data;
 
-  const topRepos = getTopRepos(data.repos, 6);
-
-  return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8 md:px-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <ProfileHeader
-          user={data.user}
-          totalStars={data.totalStars}
-          totalForks={data.totalForks}
+    return (
+      <div className="mx-auto min-h-screen max-w-5xl px-4 py-8 md:px-6">
+        <HeroCard
+          user={user}
+          totalStars={totalStars}
+          totalForks={totalForks}
+          repoCount={repos.length}
+          npmStats={npmStats}
         />
 
-        <div className="flex flex-col gap-4">
-          {data.languages.length > 0 && (
-            <LanguageChart languages={data.languages} />
-          )}
-          <SocialLinks user={data.user} />
-        </div>
+        <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-5">
+            <CategorySection categories={categories} />
+          </div>
 
-        <div className="col-span-full">
-          <h2 className="mb-4 text-sm font-semibold text-white">
-            Top Repositories
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {topRepos.map((repo) => (
-              <RepoCard key={repo.name} repo={repo} />
-            ))}
+          <div className="space-y-5">
+            {npmStats && npmStats.packages.length > 0 && (
+              <NpmCard stats={npmStats} />
+            )}
+            <TechStack languages={languages} />
+            <TopicCloud topics={topTopics} />
+            <ActivityGraph timeline={activityTimeline} />
+            <SocialLinks user={user} />
           </div>
         </div>
 
-        {data.repos.length > 6 && (
-          <div className="col-span-full text-center">
-            <a
-              href={`${data.user.html_url}?tab=repositories`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-sm text-gray-300 transition-colors hover:border-white/20 hover:text-white"
-            >
-              View all {data.repos.length} repositories on GitHub
-              <svg
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                />
-              </svg>
-            </a>
-          </div>
-        )}
+        <div className="mt-10">
+          <ShareBar user={user} />
+        </div>
+
+        <Footer />
       </div>
-
-      <Footer />
-    </main>
-  );
+    );
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      notFound();
+    }
+    if (error instanceof RateLimitError) {
+      throw error;
+    }
+    throw error;
+  }
 }
