@@ -27,20 +27,22 @@ export async function generateMetadata({
     const title = `${user.name ?? user.login} — GitShow`;
     const description = `${repos.length} open source projects · ${totalStars} stars${user.bio ? ` · ${user.bio}` : ""}`;
 
+    const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 3600000)}`;
+
     return {
       title,
       description,
       openGraph: {
         title,
         description,
-        images: [`/api/og/${username}`],
+        images: [ogImage],
         type: "profile",
       },
       twitter: {
         card: "summary_large_image",
         title,
         description,
-        images: [`/api/og/${username}`],
+        images: [ogImage],
       },
     };
   } catch {
