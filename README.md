@@ -1,11 +1,11 @@
-# GitShow
+# GitShow — Beautiful Developer Portfolio from Your GitHub Profile
 
 [![CI](https://github.com/ofershap/gitshow/actions/workflows/ci.yml/badge.svg)](https://github.com/ofershap/gitshow/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Your GitHub profile, but way better.**
+**Your GitHub profile, but way better.** Auto-generated developer portfolio with npm downloads, smart categories, tech stack, and OG social cards.
 
 ```
 github.com/username  →  gitshow.dev/username
@@ -15,7 +15,7 @@ Replace `github.com` with `gitshow.dev` in any profile URL. No signup, no config
 
 > Inspired by [GitMCP](https://gitmcp.io) — same URL-swap pattern, but for developer portfolios instead of AI context.
 
-![GitShow Preview](assets/preview.png)
+![GitShow developer portfolio preview — auto-generated from GitHub profile with npm stats and categories](assets/preview.png)
 
 ---
 
