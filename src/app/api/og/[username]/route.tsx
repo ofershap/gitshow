@@ -194,7 +194,7 @@ export async function GET(
             <StatBox icon="🍴" value={fmtNum(totalForks)} label="Forks" color="#06b6d4" />
             <StatBox icon="👥" value={fmtNum(user.followers)} label="Followers" color="#10b981" />
             {npmStats && npmStats.totalDownloads > 0 ? (
-              <StatBox icon="📥" value={fmtNum(npmStats.totalDownloads)} label="npm dl/mo" color="#ef4444" />
+              <StatBox icon="📥" value={fmtNum(npmStats.totalDownloads)} label="npm dl/mo" color="#10b981" />
             ) : null}
           </div>
 

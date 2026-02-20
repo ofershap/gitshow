@@ -38,7 +38,7 @@ export function NpmCard({ stats }: NpmCardProps) {
               className="group block"
             >
               <div className="flex items-center justify-between text-xs">
-                <span className="font-mono text-gray-300 group-hover:text-red-300 transition-colors truncate mr-2">
+                <span className="font-mono text-gray-300 group-hover:text-emerald-300 transition-colors truncate mr-2">
                   {pkg.name}
                 </span>
                 <span className="shrink-0 tabular-nums text-gray-500">
@@ -50,7 +50,7 @@ export function NpmCard({ stats }: NpmCardProps) {
                   className="h-full rounded-full transition-all group-hover:brightness-125"
                   style={{
                     width: `${width}%`,
-                    background: "linear-gradient(90deg, rgba(239,68,68,0.7), rgba(244,63,94,0.5))",
+                    background: "linear-gradient(90deg, rgba(16,185,129,0.7), rgba(52,211,153,0.5))",
                   }}
                 />
               </div>

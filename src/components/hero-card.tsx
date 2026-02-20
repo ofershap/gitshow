@@ -29,7 +29,7 @@ export function HeroCard({
       value: formatNumber(npmStats.totalDownloads),
       label: "npm dl/mo",
       icon: "📥",
-      accent: "red",
+      accent: "lime",
     });
   }
 
@@ -38,7 +38,7 @@ export function HeroCard({
     amber: "border-amber-500/20 bg-amber-500/[0.06] hover:border-amber-500/40 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)]",
     cyan: "border-cyan-500/20 bg-cyan-500/[0.06] hover:border-cyan-500/40 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)]",
     emerald: "border-emerald-500/20 bg-emerald-500/[0.06] hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)]",
-    red: "border-red-500/20 bg-red-500/[0.06] hover:border-red-500/40 hover:shadow-[0_0_30px_rgba(239,68,68,0.1)]",
+    lime: "border-lime-500/20 bg-lime-500/[0.06] hover:border-lime-500/40 hover:shadow-[0_0_30px_rgba(132,204,22,0.1)]",
   };
 
   return (
