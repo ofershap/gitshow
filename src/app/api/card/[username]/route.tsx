@@ -24,53 +24,50 @@ export async function GET(
           alignItems: "center",
           background: "#0a0a0b",
           fontFamily: "system-ui, sans-serif",
-          padding: "0 20px",
+          padding: "0 40px",
           position: "relative",
           overflow: "hidden",
         }}
       >
-        {/* Ambient glow */}
         <div
           style={{
             position: "absolute",
-            top: "-40px",
-            left: "-20px",
-            width: "120px",
-            height: "120px",
+            top: "-80px",
+            left: "-40px",
+            width: "240px",
+            height: "240px",
             borderRadius: "50%",
             background: "radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%)",
           }}
         />
 
-        {/* Avatar */}
         <div style={{ display: "flex", flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={user.avatar_url}
             alt=""
-            width={40}
-            height={40}
+            width={80}
+            height={80}
             style={{
-              borderRadius: "10px",
-              border: "1.5px solid rgba(20,184,166,0.3)",
-              boxShadow: "0 0 12px rgba(20,184,166,0.1)",
+              borderRadius: "20px",
+              border: "3px solid rgba(20,184,166,0.3)",
+              boxShadow: "0 0 24px rgba(20,184,166,0.1)",
             }}
           />
         </div>
 
-        {/* Name + handle */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            marginLeft: "12px",
+            marginLeft: "24px",
             justifyContent: "center",
             flexShrink: 0,
           }}
         >
           <span
             style={{
-              fontSize: "16px",
+              fontSize: "32px",
               fontWeight: 700,
               color: "#ffffff",
               letterSpacing: "-0.01em",
@@ -81,7 +78,7 @@ export async function GET(
           </span>
           <span
             style={{
-              fontSize: "11px",
+              fontSize: "22px",
               color: "#14b8a6",
               fontFamily: "monospace",
               lineHeight: 1.2,
@@ -91,23 +88,21 @@ export async function GET(
           </span>
         </div>
 
-        {/* Divider */}
         <div
           style={{
-            width: "1px",
-            height: "28px",
+            width: "2px",
+            height: "56px",
             background: "rgba(255,255,255,0.08)",
-            marginLeft: "16px",
-            marginRight: "14px",
+            marginLeft: "32px",
+            marginRight: "28px",
             flexShrink: 0,
           }}
         />
 
-        {/* Stats */}
         <div
           style={{
             display: "flex",
-            gap: "14px",
+            gap: "28px",
             alignItems: "center",
             flex: 1,
           }}
@@ -118,13 +113,13 @@ export async function GET(
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "4px",
+                gap: "8px",
               }}
             >
-              <span style={{ fontSize: "12px" }}>{s.icon}</span>
+              <span style={{ fontSize: "24px" }}>{s.icon}</span>
               <span
                 style={{
-                  fontSize: "13px",
+                  fontSize: "26px",
                   fontWeight: 700,
                   color: "#e4e4e7",
                 }}
@@ -133,7 +128,7 @@ export async function GET(
               </span>
               <span
                 style={{
-                  fontSize: "10px",
+                  fontSize: "20px",
                   color: "#52525b",
                   fontWeight: 500,
                 }}
@@ -144,19 +139,18 @@ export async function GET(
           ))}
         </div>
 
-        {/* GitShow branding */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "4px",
+            gap: "8px",
             flexShrink: 0,
             marginLeft: "auto",
           }}
         >
           <span
             style={{
-              fontSize: "11px",
+              fontSize: "22px",
               fontWeight: 700,
               background: "linear-gradient(135deg, #14b8a6, #f59e0b)",
               backgroundClip: "text",
@@ -168,8 +162,8 @@ export async function GET(
         </div>
       </div>,
       {
-        width: 460,
-        height: 56,
+        width: 920,
+        height: 112,
       }
     );
   } catch (error) {
