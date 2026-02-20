@@ -139,27 +139,19 @@ export async function GET(
           ))}
         </div>
 
-        <div
+        <span
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            flexShrink: 0,
-            marginLeft: "auto",
+            position: "absolute",
+            bottom: "6px",
+            right: "16px",
+            fontSize: "14px",
+            fontWeight: 500,
+            color: "#3f3f46",
+            letterSpacing: "0.02em",
           }}
         >
-          <span
-            style={{
-              fontSize: "22px",
-              fontWeight: 700,
-              background: "linear-gradient(135deg, #14b8a6, #f59e0b)",
-              backgroundClip: "text",
-              color: "transparent",
-            }}
-          >
-            GitShow
-          </span>
-        </div>
+          made with gitshow
+        </span>
       </div>,
       {
         width: 920,
