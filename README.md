@@ -59,6 +59,24 @@ gitshow.dev/?https://github.com/username           # bare prefix
 
 ---
 
+## README Badge
+
+Want your own? Add a dynamic profile card to any GitHub README — one line of markdown.
+
+[![Made by ofershap](https://gitshow.dev/api/card/ofershap)](https://gitshow.dev/ofershap)
+
+### Setup
+
+Replace `YOUR_USERNAME` with your GitHub username:
+
+```markdown
+[![Made by YOUR_USERNAME](https://gitshow.dev/api/card/YOUR_USERNAME)](https://gitshow.dev/YOUR_USERNAME)
+```
+
+The card is a dynamic PNG that pulls your live GitHub stats (repos, stars, npm downloads). It updates automatically every hour via ISR caching. No tokens, no setup — just paste and go.
+
+---
+
 ## Architecture
 
 ```
@@ -123,8 +141,11 @@ src/
 │   │   ├── loading.tsx             # Spinner while loading
 │   │   ├── error.tsx               # Error boundary (rate limit, etc.)
 │   │   └── not-found.tsx           # 404 for invalid usernames
-│   └── api/og/[username]/
-│       └── route.tsx               # OG image generation (1200×630 PNG)
+│   └── api/
+│       ├── og/[username]/
+│       │   └── route.tsx           # OG social card (1200×630 PNG)
+│       └── card/[username]/
+│           └── route.tsx           # README badge (920×112 PNG, 2x retina)
 ├── components/
 │   ├── hero-card.tsx               # Avatar, name, bio, aggregate stats + npm
 │   ├── category-section.tsx        # Auto-grouped repos with expand/collapse
@@ -160,7 +181,7 @@ npm run lint     # ESLint
 
 ## Author
 
-**Ofer Shapira**
+[![Made by ofershap](https://gitshow.dev/api/card/ofershap)](https://gitshow.dev/ofershap)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/ofershap)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=flat&logo=github&logoColor=white)](https://github.com/ofershap)
