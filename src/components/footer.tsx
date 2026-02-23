@@ -19,7 +19,7 @@ export function Footer() {
         </code>{" "}
         with{" "}
         <code className="rounded px-1.5 py-0.5 font-mono text-teal-400/60" style={{ background: "rgba(20,184,166,0.08)" }}>
-          gitshow.me
+          gitshow.dev
         </code>{" "}
         in any profile URL
       </p>

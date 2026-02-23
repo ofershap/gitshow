@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { RepoCategory, GitHubRepo } from "@/lib/types";
 import { formatNumber, timeAgo } from "@/lib/utils";
+
+const SEARCH_THRESHOLD = 10;
 
 interface CategorySectionProps {
   categories: RepoCategory[];
@@ -70,14 +72,70 @@ function RepoRow({ repo }: { repo: GitHubRepo }) {
 
 export function CategorySection({ categories }: CategorySectionProps) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const totalProjects = useMemo(
+    () => categories.reduce((sum, c) => sum + c.repos.length, 0),
+    [categories]
+  );
+
+  const filteredCategories = useMemo(() => {
+    if (!search.trim()) return categories;
+    const q = search.toLowerCase();
+    return categories
+      .map((cat) => ({
+        ...cat,
+        repos: cat.repos.filter(
+          (r) =>
+            r.name.toLowerCase().includes(q) ||
+            r.description?.toLowerCase().includes(q) ||
+            r.topics.some((t) => t.toLowerCase().includes(q)) ||
+            r.language?.toLowerCase().includes(q)
+        ),
+      }))
+      .filter((cat) => cat.repos.length > 0);
+  }, [categories, search]);
 
   return (
     <div className="space-y-4">
       <h2 className="font-display text-lg font-semibold text-white">
         Projects by Category
       </h2>
+      {totalProjects >= SEARCH_THRESHOLD && (
+        <div className="relative">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={`Search ${totalProjects} projects...`}
+            className="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 pl-10 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-teal-500/40 focus:bg-white/[0.06]"
+          />
+          <svg
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      )}
+      {search && filteredCategories.length === 0 && (
+        <p className="py-8 text-center text-sm text-zinc-500">
+          No projects matching &ldquo;{search}&rdquo;
+        </p>
+      )}
       <div className="space-y-4">
-        {categories.map((cat, i) => {
+        {filteredCategories.map((cat, i) => {
           const isExpanded = expandedCategory === cat.label;
           const visibleRepos = isExpanded ? cat.repos : cat.repos.slice(0, 3);
           const hasMore = cat.repos.length > 3;

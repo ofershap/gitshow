@@ -17,8 +17,8 @@ export function HeroCard({
   repoCount,
   npmStats,
 }: HeroCardProps) {
-  const stats = [
-    { value: formatNumber(repoCount), label: "Projects", icon: "📦", accent: "teal" },
+  const stats: { value: string; label: string; icon: string; accent: string; href?: string }[] = [
+    { value: formatNumber(repoCount), label: "Projects", icon: "📦", accent: "teal", href: "#projects" },
     { value: formatNumber(totalStars), label: "Stars", icon: "⭐", accent: "amber" },
     { value: formatNumber(totalForks), label: "Forks", icon: "🍴", accent: "cyan" },
     { value: formatNumber(user.followers), label: "Followers", icon: "👥", accent: "emerald" },
@@ -104,18 +104,33 @@ export function HeroCard({
 
         {/* Stats grid */}
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className={`card-hover rounded-2xl border px-4 py-3.5 text-center transition-all ${accentStyles[s.accent]}`}
-            >
-              <div className="text-xl">{s.icon}</div>
-              <div className="mt-1 font-display text-2xl font-bold tabular-nums text-white">
-                {s.value}
+          {stats.map((s) => {
+            const content = (
+              <>
+                <div className="text-xl">{s.icon}</div>
+                <div className="mt-1 font-display text-2xl font-bold tabular-nums text-white">
+                  {s.value}
+                </div>
+                <div className="mt-0.5 text-[11px] font-medium text-zinc-500">{s.label}</div>
+              </>
+            );
+
+            const className = `card-hover rounded-2xl border px-4 py-3.5 text-center transition-all ${accentStyles[s.accent]}`;
+
+            return s.href ? (
+              <a
+                key={s.label}
+                href={s.href}
+                className={`${className} cursor-pointer no-underline`}
+              >
+                {content}
+              </a>
+            ) : (
+              <div key={s.label} className={className}>
+                {content}
               </div>
-              <div className="mt-0.5 text-[11px] font-medium text-zinc-500">{s.label}</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

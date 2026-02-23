@@ -36,7 +36,7 @@ export function UrlSwap() {
   }, []);
 
   const username = EXAMPLES[index];
-  const domain = phase === "gitshow" ? "gitshow.me" : "github.com";
+  const domain = phase === "gitshow" ? "gitshow.dev" : "github.com";
   const isActive = phase === "gitshow" || phase === "swap";
 
   return (

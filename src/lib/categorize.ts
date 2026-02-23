@@ -40,9 +40,10 @@ const RULES: CategoryRule[] = [
       lc(r.name).includes("openai") ||
       lc(r.name).includes("langchain") ||
       r.topics.some((t) =>
-        ["ai", "machine-learning", "openai", "llm", "deep-learning", "chatgpt", "claude", "anthropic"].includes(t)
+        ["ai", "ai-agent", "machine-learning", "openai", "llm", "deep-learning", "chatgpt", "claude", "claude-code", "anthropic", "gpt-4", "cursor-plugin", "cursor-ide", "best-practices"].includes(t)
       ) ||
-      descMatch(r.description, /\b(ai|llm|gpt|machine.?learn|neural|model|inference)\b/i),
+      lc(r.name).includes("cursor") ||
+      descMatch(r.description, /\b(ai|llm|gpt|machine.?learn|neural|model|inference|cursor|claude|agent)\b/i),
   },
   {
     label: "Web Frameworks",
@@ -155,27 +156,47 @@ const RULES: CategoryRule[] = [
   },
 ];
 
+function repoScore(r: GitHubRepo): number {
+  const stars = r.stargazers_count * 3;
+  const forks = r.forks_count * 2;
+  const daysSincePush = (Date.now() - new Date(r.pushed_at).getTime()) / 86_400_000;
+  const recency = Math.max(0, 1 - daysSincePush / 365);
+  return stars + forks + recency;
+}
+
+function categoryScore(repos: GitHubRepo[]): number {
+  const topRepo = Math.max(...repos.map(repoScore));
+  const aggregate = repos.reduce((sum, r) => sum + repoScore(r), 0);
+  return topRepo * 2 + aggregate;
+}
+
+function sortRepos(repos: GitHubRepo[]): GitHubRepo[] {
+  return [...repos].sort((a, b) => repoScore(b) - repoScore(a));
+}
+
 export function categorizeRepos(repos: GitHubRepo[]): RepoCategory[] {
+  const visible = repos.filter((r) => r.description || r.topics.length > 0);
+
   const assigned = new Set<string>();
   const categoryMap = new Map<string, RepoCategory>();
 
   const sortedRules = [...RULES].sort((a, b) => b.priority - a.priority);
 
   for (const rule of sortedRules) {
-    const matched = repos.filter(
+    const matched = visible.filter(
       (r) => !assigned.has(r.name) && rule.match(r)
     );
     if (matched.length > 0) {
       categoryMap.set(rule.label, {
         label: rule.label,
         emoji: rule.emoji,
-        repos: matched,
+        repos: sortRepos(matched),
       });
       matched.forEach((r) => assigned.add(r.name));
     }
   }
 
-  const uncategorized = repos.filter((r) => !assigned.has(r.name));
+  const uncategorized = visible.filter((r) => !assigned.has(r.name));
 
   if (uncategorized.length > 0) {
     const byLang = new Map<string, GitHubRepo[]>();
@@ -197,13 +218,13 @@ export function categorizeRepos(repos: GitHubRepo[]): RepoCategory[] {
         c.label.toLowerCase().includes(lang.toLowerCase())
       );
       if (existing) {
-        existing.repos.push(...langRepos);
+        existing.repos.push(...sortRepos(langRepos));
       } else {
         const emoji = LANG_EMOJI[lang] ?? "📁";
         categoryMap.set(lang, {
           label: `${lang} Projects`,
           emoji,
-          repos: langRepos,
+          repos: sortRepos(langRepos),
         });
       }
     }
@@ -212,18 +233,18 @@ export function categorizeRepos(repos: GitHubRepo[]): RepoCategory[] {
       categoryMap.set("Other Projects", {
         label: "Other Projects",
         emoji: "📁",
-        repos: otherBucket,
+        repos: sortRepos(otherBucket),
       });
     }
   }
 
-  const MAX_CATEGORIES = 6;
+  const MAX_CATEGORIES = 8;
   let result = Array.from(categoryMap.values())
     .filter((c) => c.repos.length > 0)
     .sort((a, b) => {
       if (a.label === "Other Projects") return 1;
       if (b.label === "Other Projects") return -1;
-      return b.repos.length - a.repos.length;
+      return categoryScore(b.repos) - categoryScore(a.repos);
     });
 
   if (result.length > MAX_CATEGORIES) {
@@ -233,12 +254,12 @@ export function categorizeRepos(repos: GitHubRepo[]): RepoCategory[] {
 
     const existingOther = keep.find((c) => c.label === "Other Projects");
     if (existingOther) {
-      existingOther.repos.push(...mergedRepos);
+      existingOther.repos.push(...sortRepos(mergedRepos));
     } else {
       keep.push({
         label: "Other Projects",
         emoji: "📁",
-        repos: mergedRepos,
+        repos: sortRepos(mergedRepos),
       });
     }
     result = keep;

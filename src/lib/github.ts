@@ -72,6 +72,22 @@ async function githubFetch<T>(path: string): Promise<T> {
   return res.json();
 }
 
+async function fetchAllRepos(username: string): Promise<GitHubRepo[]> {
+  const all: GitHubRepo[] = [];
+  let page = 1;
+
+  while (true) {
+    const batch = await githubFetch<GitHubRepo[]>(
+      `/users/${username}/repos?per_page=100&type=owner&page=${page}`
+    );
+    all.push(...batch);
+    if (batch.length < 100) break;
+    page++;
+  }
+
+  return all;
+}
+
 export class NotFoundError extends Error {
   constructor(message: string) {
     super(message);
@@ -141,12 +157,12 @@ function computeTimeline(
 export async function fetchProfile(username: string): Promise<ProfileData> {
   const [user, repos] = await Promise.all([
     githubFetch<GitHubUser>(`/users/${username}`),
-    githubFetch<GitHubRepo[]>(
-      `/users/${username}/repos?sort=stars&per_page=100&type=owner`
-    ),
+    fetchAllRepos(username),
   ]);
 
-  const publicRepos = repos.filter((r) => !r.fork && !r.archived);
+  const publicRepos = repos.filter(
+    (r) => !r.fork && !r.archived && r.name.toLowerCase() !== username.toLowerCase()
+  );
 
   const totalStars = publicRepos.reduce(
     (sum, r) => sum + r.stargazers_count,
