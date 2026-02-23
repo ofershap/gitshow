@@ -10,6 +10,7 @@ import { ActivityGraph } from "@/components/activity-graph";
 import { ShareBar } from "@/components/share-bar";
 import { SocialLinks } from "@/components/social-links";
 import { Footer } from "@/components/footer";
+import { JsonLd, profilePageJsonLd } from "@/components/json-ld";
 
 export const revalidate = 3600;
 
@@ -21,32 +22,44 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { username } = await params;
+  const profileUrl = `https://gitshow.dev/${username}`;
 
   try {
     const { user, totalStars, repos } = await fetchProfile(username);
-    const title = `${user.name ?? user.login} — GitShow`;
-    const description = `${repos.length} open source projects · ${totalStars} stars${user.bio ? ` · ${user.bio}` : ""}`;
+    const displayName = user.name ?? user.login;
+    const title = `${displayName} — Developer Portfolio`;
+    const description = `${displayName}'s open source portfolio: ${repos.length} projects, ${totalStars} stars${user.bio ? `. ${user.bio}` : ""}`;
 
     const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 3600000)}`;
 
     return {
       title,
       description,
+      alternates: {
+        canonical: profileUrl,
+      },
       openGraph: {
         title,
         description,
-        images: [ogImage],
+        url: profileUrl,
+        siteName: "GitShow",
+        locale: "en_US",
+        images: [{ url: ogImage, width: 1200, height: 630, alt: `${displayName}'s developer portfolio on GitShow` }],
         type: "profile",
       },
       twitter: {
         card: "summary_large_image",
+        site: "@ofaborsh",
         title,
         description,
         images: [ogImage],
       },
     };
   } catch {
-    return { title: `${username} — GitShow` };
+    return {
+      title: `${username} — GitShow`,
+      alternates: { canonical: profileUrl },
+    };
   }
 }
 
@@ -76,7 +89,8 @@ export default async function ProfilePage({ params }: PageProps) {
   } = data;
 
   return (
-    <div className="mx-auto min-h-screen max-w-6xl px-4 py-8 md:px-6">
+    <article className="mx-auto min-h-screen max-w-6xl px-4 py-8 md:px-6">
+      <JsonLd data={profilePageJsonLd(user, repos.length, totalStars)} />
       <div className="animate-fade-up">
         <HeroCard
           user={user}
@@ -88,7 +102,7 @@ export default async function ProfilePage({ params }: PageProps) {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-12">
-        <div className="lg:col-span-8 animate-fade-up stagger-2">
+        <div id="projects" className="lg:col-span-8 animate-fade-up stagger-2 scroll-mt-6">
           <CategorySection categories={categories} />
         </div>
 
@@ -118,6 +132,6 @@ export default async function ProfilePage({ params }: PageProps) {
       </div>
 
       <Footer />
-    </div>
+    </article>
   );
 }

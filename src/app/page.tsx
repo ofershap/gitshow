@@ -1,6 +1,7 @@
 import { UrlSwap } from "@/components/url-swap";
 import { UsernameInput } from "@/components/username-input";
 import { Footer } from "@/components/footer";
+import { JsonLd, websiteJsonLd, webApplicationJsonLd } from "@/components/json-ld";
 import Link from "next/link";
 
 const FEATURED = [
@@ -12,8 +13,10 @@ const FEATURED = [
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col overflow-hidden">
-      {/* Hero */}
-      <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-28 md:py-36">
+      <JsonLd data={websiteJsonLd()} />
+      <JsonLd data={webApplicationJsonLd()} />
+
+      <section aria-label="Hero" className="relative flex flex-1 flex-col items-center justify-center px-4 py-28 md:py-36">
         {/* Background orbs — teal + warm amber */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute left-1/2 top-0 h-[600px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/15 blur-[120px]" />
@@ -42,7 +45,7 @@ export default function Home() {
             </code>{" "}
             for{" "}
             <code className="rounded-lg bg-teal-500/15 px-2.5 py-1 font-mono text-[0.9em] text-teal-300 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
-              gitshow.me
+              gitshow.dev
             </code>{" "}
             — that&apos;s it.
           </p>
@@ -60,11 +63,10 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Featured profiles */}
-        <div className="relative z-10 mt-24 w-full max-w-2xl animate-fade-up stagger-5">
-          <p className="mb-6 text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">
+        <section aria-label="Featured profiles" className="relative z-10 mt-24 w-full max-w-2xl animate-fade-up stagger-5">
+          <h2 className="mb-6 text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">
             See it in action
-          </p>
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {FEATURED.map((profile) => (
               <Link
@@ -83,10 +85,10 @@ export default function Home() {
               </Link>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Features */}
-        <div className="relative z-10 mt-28 w-full max-w-4xl animate-fade-up stagger-6">
+        <section aria-label="Features" className="relative z-10 mt-28 w-full max-w-4xl animate-fade-up stagger-6">
+          <h2 className="sr-only">Features</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <FeatureCard
               icon="⚡"
@@ -110,8 +112,8 @@ export default function Home() {
               glow="hover:shadow-[0_0_60px_rgba(16,185,129,0.1)]"
             />
           </div>
-        </div>
-      </div>
+        </section>
+      </section>
 
       <Footer />
     </main>

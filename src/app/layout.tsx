@@ -22,15 +22,37 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gitshow.dev"),
-  title: "GitShow — Your GitHub, beautifully shown",
+  title: {
+    default: "GitShow — Your GitHub, beautifully shown",
+    template: "%s — GitShow",
+  },
   description:
     "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio. Open source, no signup required.",
+  applicationName: "GitShow",
+  authors: [{ name: "Ofer Shapira", url: "https://github.com/ofershap" }],
+  creator: "Ofer Shapira",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://gitshow.dev",
+  },
   openGraph: {
     title: "GitShow — Your GitHub, beautifully shown",
     description:
       "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
     type: "website",
     url: "https://gitshow.dev",
+    siteName: "GitShow",
+    locale: "en_US",
     images: [
       {
         url: "/api/og",
@@ -42,6 +64,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@ofaborsh",
+    creator: "@ofaborsh",
     title: "GitShow — Your GitHub, beautifully shown",
     description:
       "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
