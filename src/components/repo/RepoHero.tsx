@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { RepoShowroomData } from "@/lib/repo-types";
+import { CloneButton } from "./CloneButton";
 
 interface RepoHeroProps {
   data: RepoShowroomData;
@@ -10,6 +11,7 @@ export function RepoHero({ data }: RepoHeroProps) {
   const ghUrl = repo.html_url;
   const tagline = repo.description || `${repo.owner.login}'s project`;
   const hasHomepage = !!repo.homepage;
+  const isJsTs = ["TypeScript", "JavaScript"].includes(repo.language ?? "");
 
   return (
     <header className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#0c0c0e] to-[#0a0a0c]">
@@ -66,44 +68,57 @@ export function RepoHero({ data }: RepoHeroProps) {
           </div>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
           <a
             href={ghUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-6 py-3 text-sm font-semibold text-white transition hover:border-white/[0.2] hover:bg-white/[0.1]"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/5 px-4 py-2 font-mono text-xs text-amber-300/90 transition hover:border-amber-500/40 hover:bg-amber-500/10"
           >
-            <GitHubIcon />
-            GitHub
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            Star on GitHub
           </a>
+          <a
+            href={`${ghUrl}/fork`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-2 font-mono text-xs text-zinc-400 transition hover:border-white/[0.15] hover:text-zinc-300"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
+            Fork
+          </a>
+          <CloneButton repoUrl={ghUrl} />
           {hasHomepage && (
             <a
               href={repo.homepage!}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-full border border-teal-500/40 bg-teal-500/15 px-6 py-3 text-sm font-semibold text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.15)] transition hover:border-teal-500/60 hover:bg-teal-500/25 hover:text-teal-300 hover:shadow-[0_0_40px_rgba(20,184,166,0.2)]"
+              className="inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/5 px-4 py-2 font-mono text-xs text-teal-300/90 transition hover:border-teal-500/40 hover:bg-teal-500/10"
             >
               <GlobeIcon />
-              Visit Website
+              Website
+            </a>
+          )}
+          {isJsTs && (
+            <a
+              href={`https://www.npmjs.com/package/${repo.name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/5 px-4 py-2 font-mono text-xs text-red-300/90 transition hover:border-red-500/40 hover:bg-red-500/10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0h-2.666V8.667h2.666v5.331zm12.001 0h-2.666v-4h-1.333v4h-1.335v-4h-1.333v4h-2.666V8.667h9.333v5.331z"/></svg>
+              npm
             </a>
           )}
         </div>
 
         {repo.language && (
-          <p className="mt-8 font-mono text-sm text-zinc-500">
+          <p className="mt-6 font-mono text-sm text-zinc-500">
             {repo.language}
           </p>
         )}
       </div>
     </header>
-  );
-}
-
-function GitHubIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="shrink-0">
-      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-    </svg>
   );
 }
 
