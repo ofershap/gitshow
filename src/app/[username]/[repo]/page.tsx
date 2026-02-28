@@ -126,15 +126,15 @@ export default async function RepoShowroomPage({ params }: PageProps) {
           Fork
         </a>
         <CloneButton repoUrl={data.repo.html_url} />
-        {data.repo.homepage && (
+        {["TypeScript", "JavaScript"].includes(data.repo.language ?? "") && (
           <a
-            href={data.repo.homepage}
+            href={`https://www.npmjs.com/package/${data.repo.name}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/5 px-4 py-2 font-mono text-xs text-teal-300/90 transition hover:border-teal-500/40 hover:bg-teal-500/10"
+            className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/5 px-4 py-2 font-mono text-xs text-red-300/90 transition hover:border-red-500/40 hover:bg-red-500/10"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            Website
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0h-2.666V8.667h2.666v5.331zm12.001 0h-2.666v-4h-1.333v4h-1.335v-4h-1.333v4h-2.666V8.667h9.333v5.331z"/></svg>
+            npm
           </a>
         )}
       </div>

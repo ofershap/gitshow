@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { RepoShowroomData } from "@/lib/repo-types";
-import { formatNumber } from "@/lib/utils";
 
 interface RepoHeroProps {
   data: RepoShowroomData;
@@ -90,43 +89,11 @@ export function RepoHero({ data }: RepoHeroProps) {
           )}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-zinc-500">
-          <a
-            href={ghUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition hover:text-zinc-400"
-          >
-            <span className="font-mono font-semibold tabular-nums text-zinc-400">
-              {formatNumber(repo.stargazers_count)}
-            </span>{" "}
-            stars
-          </a>
-          <span className="text-zinc-600">·</span>
-          <a
-            href={`${ghUrl}/fork`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition hover:text-zinc-400"
-          >
-            <span className="font-mono font-semibold tabular-nums text-zinc-400">
-              {formatNumber(repo.forks_count)}
-            </span>{" "}
-            forks
-          </a>
-          {repo.language && (
-            <>
-              <span className="text-zinc-600">·</span>
-              <span className="font-mono text-zinc-400">{repo.language}</span>
-            </>
-          )}
-          {repo.license && (
-            <>
-              <span className="text-zinc-600">·</span>
-              <span className="font-mono text-zinc-400">{repo.license}</span>
-            </>
-          )}
-        </div>
+        {repo.language && (
+          <p className="mt-8 font-mono text-sm text-zinc-500">
+            {repo.language}
+          </p>
+        )}
       </div>
     </header>
   );

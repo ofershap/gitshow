@@ -76,7 +76,7 @@ export function RepoAchievements({ data }: RepoAchievementsProps) {
       {items.map((item, i) => {
         const pill = (
           <span
-            className={`inline-flex items-center gap-2 rounded-full border font-mono text-sm text-zinc-400 ${
+            className={`inline-flex items-center gap-1.5 rounded-full border font-mono text-xs text-zinc-400 ${
               item.accent === "star"
                 ? "border-amber-500/25 bg-amber-500/10 text-amber-200/90"
                 : item.accent === "teal"
@@ -86,7 +86,7 @@ export function RepoAchievements({ data }: RepoAchievementsProps) {
                   : item.accent === "release"
                     ? "border-violet-500/25 bg-violet-500/10 text-violet-300/90"
                     : "border-white/[0.08] bg-white/[0.04]"
-            } px-3.5 py-2 transition hover:bg-white/[0.06]`}
+            } px-3 py-1.5 transition hover:bg-white/[0.06]`}
           >
             {item.icon}
             <span>{item.label}</span>
