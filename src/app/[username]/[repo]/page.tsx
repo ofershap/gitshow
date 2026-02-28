@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchRepoShowroom, RepoNotFoundError } from "@/lib/github-repo";
 import { RepoHero } from "@/components/repo/RepoHero";
@@ -91,9 +92,9 @@ export default async function RepoShowroomPage({ params }: PageProps) {
         <JsonLd key={i} data={item} />
       ))}
       <nav className="mb-6 flex items-center gap-1.5 font-mono text-xs text-zinc-500 animate-fade-up">
-        <a href="/" className="transition hover:text-teal-400">GitShow</a>
+        <Link href="/" className="transition hover:text-teal-400">GitShow</Link>
         <span className="text-zinc-600">/</span>
-        <a href={`/${owner}`} className="transition hover:text-teal-400">{owner}</a>
+        <Link href={`/${owner}`} className="transition hover:text-teal-400">{owner}</Link>
         <span className="text-zinc-600">/</span>
         <span className="text-zinc-400">{repo}</span>
       </nav>

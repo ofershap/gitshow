@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { UrlSwap } from "@/components/url-swap";
 import { UsernameInput } from "@/components/username-input";
 import { ProfileTicker } from "@/components/profile-ticker";
@@ -184,7 +185,7 @@ export default function Home() {
           <p className="mb-4 text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">
             Built with GitShow
           </p>
-          <a
+          <Link
             href="/ofershap"
             className="block transition-transform hover:scale-[1.02]"
           >
@@ -197,7 +198,7 @@ export default function Home() {
               loading="lazy"
               className="h-14 w-auto rounded-xl border border-white/[0.06] shadow-[0_0_30px_rgba(20,184,166,0.08)]"
             />
-          </a>
+          </Link>
         </div>
       </section>
 
