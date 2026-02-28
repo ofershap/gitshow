@@ -2,7 +2,7 @@
 
 @theme inline {
   --font-sans: var(--font-dm-sans);
-  --font-display: var(--font-space-grotesk);
+  --font-display: var(--font-outfit);
   --font-mono: var(--font-jetbrains-mono);
 }
 
@@ -48,6 +48,18 @@ body::before {
   pointer-events: none;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(24px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -85,6 +97,16 @@ body::before {
   50% { border-color: rgba(20, 184, 166, 0.28); }
 }
 
+@keyframes ticker-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes ticker-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
 .animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-fade-in { animation: fade-in 0.5s ease-out both; }
 .animate-gradient { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
@@ -92,6 +114,10 @@ body::before {
 .animate-slot-flip { animation: slot-flip 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
 .animate-border-glow { animation: border-glow 3s ease-in-out infinite; }
+.animate-ticker-left { animation: ticker-left 120s linear infinite; }
+.animate-ticker-right { animation: ticker-right 120s linear infinite; }
+.ticker-row:hover .animate-ticker-left,
+.ticker-row:hover .animate-ticker-right { animation-play-state: paused; }
 
 .stagger-1 { animation-delay: 80ms; }
 .stagger-2 { animation-delay: 160ms; }
@@ -123,4 +149,12 @@ body::before {
 
 .text-glow {
   text-shadow: 0 0 40px rgba(20, 184, 166, 0.4), 0 0 80px rgba(245, 158, 11, 0.15);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
 }

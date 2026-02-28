@@ -3,6 +3,8 @@ import {
   GitHubRepo,
   LanguageStats,
   ProfileData,
+  ContributionsData,
+  RepoContribution,
 } from "./types";
 import { fetchNpmStats } from "./npm";
 import { categorizeRepos } from "./categorize";
@@ -102,6 +104,111 @@ export class RateLimitError extends Error {
   }
 }
 
+async function githubGraphQL<T>(query: string, variables: Record<string, unknown>): Promise<T> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return null as T;
+
+  const res = await fetch("https://api.github.com/graphql", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "User-Agent": "GitShow/1.0",
+    },
+    body: JSON.stringify({ query, variables }),
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) return null as T;
+
+  const json = await res.json();
+  return json.data as T;
+}
+
+const CONTRIBUTIONS_QUERY = `
+  query UserContributions($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+      contributionsCollection(from: $from, to: $to) {
+        totalCommitContributions
+        totalPullRequestContributions
+        totalIssueContributions
+        totalRepositoriesWithContributedCommits
+        commitContributionsByRepository(maxRepositories: 30) {
+          repository {
+            nameWithOwner
+            stargazerCount
+            url
+            isPrivate
+            owner { login }
+            primaryLanguage { name }
+          }
+          contributions { totalCount }
+        }
+      }
+    }
+  }
+`;
+
+interface GraphQLContributionsResponse {
+  user: {
+    contributionsCollection: {
+      totalCommitContributions: number;
+      totalPullRequestContributions: number;
+      totalIssueContributions: number;
+      totalRepositoriesWithContributedCommits: number;
+      commitContributionsByRepository: {
+        repository: {
+          nameWithOwner: string;
+          stargazerCount: number;
+          url: string;
+          isPrivate: boolean;
+          owner: { login: string };
+          primaryLanguage: { name: string } | null;
+        };
+        contributions: { totalCount: number };
+      }[];
+    };
+  };
+}
+
+async function fetchContributions(username: string): Promise<ContributionsData | null> {
+  const now = new Date();
+  const oneYearAgo = new Date(now);
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  const data = await githubGraphQL<GraphQLContributionsResponse>(
+    CONTRIBUTIONS_QUERY,
+    {
+      login: username,
+      from: oneYearAgo.toISOString(),
+      to: now.toISOString(),
+    },
+  );
+
+  if (!data?.user) return null;
+
+  const collection = data.user.contributionsCollection;
+
+  const externalRepos: RepoContribution[] = collection.commitContributionsByRepository
+    .filter((r) => !r.repository.isPrivate && r.repository.owner.login.toLowerCase() !== username.toLowerCase())
+    .map((r) => ({
+      nameWithOwner: r.repository.nameWithOwner,
+      stargazersCount: r.repository.stargazerCount,
+      primaryLanguage: r.repository.primaryLanguage?.name ?? null,
+      commitCount: r.contributions.totalCount,
+      url: r.repository.url,
+    }))
+    .sort((a, b) => b.commitCount - a.commitCount || b.stargazersCount - a.stargazersCount);
+
+  return {
+    totalCommits: collection.totalCommitContributions,
+    totalPullRequests: collection.totalPullRequestContributions,
+    totalIssues: collection.totalIssueContributions,
+    totalReposContributedTo: collection.totalRepositoriesWithContributedCommits,
+    topRepos: externalRepos.slice(0, 10),
+  };
+}
+
 function computeLanguages(repos: GitHubRepo[]): LanguageStats[] {
   const counts = new Map<string, number>();
 
@@ -174,7 +281,10 @@ export async function fetchProfile(username: string): Promise<ProfileData> {
   const topTopics = computeTopTopics(publicRepos);
   const activityTimeline = computeTimeline(publicRepos);
 
-  const npmStats = await fetchNpmStats(username).catch(() => null);
+  const [npmStats, contributions] = await Promise.all([
+    fetchNpmStats(username).catch(() => null),
+    fetchContributions(username).catch(() => null),
+  ]);
 
   return {
     user,
@@ -186,5 +296,6 @@ export async function fetchProfile(username: string): Promise<ProfileData> {
     npmStats,
     topTopics,
     activityTimeline,
+    contributions,
   };
 }

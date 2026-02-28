@@ -6,11 +6,11 @@ import { CategorySection } from "@/components/category-section";
 import { NpmCard } from "@/components/npm-card";
 import { TechStack } from "@/components/tech-stack";
 import { TopicCloud } from "@/components/topic-cloud";
-import { ActivityGraph } from "@/components/activity-graph";
 import { ShareBar } from "@/components/share-bar";
 import { SocialLinks } from "@/components/social-links";
 import { Footer } from "@/components/footer";
 import { JsonLd, profilePageJsonLd } from "@/components/json-ld";
+import { ContributionsCard, shouldShowContributions, shouldShowContributionsFirst } from "@/components/contributions-card";
 
 export const revalidate = 3600;
 
@@ -25,10 +25,13 @@ export async function generateMetadata({
   const profileUrl = `https://gitshow.dev/${username}`;
 
   try {
-    const { user, totalStars, repos } = await fetchProfile(username);
+    const { user, totalStars, repos, contributions } = await fetchProfile(username);
     const displayName = user.name ?? user.login;
     const title = `${displayName} — Developer Portfolio`;
-    const description = `${displayName}'s open source portfolio: ${repos.length} projects, ${totalStars} stars${user.bio ? `. ${user.bio}` : ""}`;
+    const contribMeta = contributions && contributions.topRepos.length >= 2
+      ? `, contributor to ${contributions.totalReposContributedTo} projects`
+      : "";
+    const description = `${displayName}'s open source portfolio: ${repos.length} projects, ${totalStars} stars${contribMeta}${user.bio ? `. ${user.bio}` : ""}`;
 
     const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 3600000)}`;
 
@@ -86,11 +89,15 @@ export default async function ProfilePage({ params }: PageProps) {
     npmStats,
     topTopics,
     activityTimeline,
+    contributions,
   } = data;
+
+  const showContributions = shouldShowContributions(contributions, repos.length);
+  const contributionsFirst = showContributions && contributions && shouldShowContributionsFirst(contributions, repos.length);
 
   return (
     <article className="mx-auto min-h-screen max-w-6xl px-4 py-8 md:px-6">
-      <JsonLd data={profilePageJsonLd(user, repos.length, totalStars)} />
+      <JsonLd data={profilePageJsonLd(user, repos.length, totalStars, contributions)} />
       <div className="animate-fade-up">
         <HeroCard
           user={user}
@@ -101,12 +108,23 @@ export default async function ProfilePage({ params }: PageProps) {
         />
       </div>
 
+      {contributionsFirst && contributions && (
+        <div className="mt-8 animate-fade-up stagger-2">
+          <ContributionsCard contributions={contributions} username={user.login} />
+        </div>
+      )}
+
       <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div id="projects" className="lg:col-span-8 animate-fade-up stagger-2 scroll-mt-6">
           <CategorySection categories={categories} />
         </div>
 
         <div className="lg:col-span-4 space-y-5">
+          {showContributions && !contributionsFirst && contributions && (
+            <div className="animate-fade-up stagger-3">
+              <ContributionsCard contributions={contributions} username={user.login} />
+            </div>
+          )}
           {npmStats && npmStats.packages.length > 0 && (
             <div className="animate-fade-up stagger-3">
               <NpmCard stats={npmStats} />
@@ -119,9 +137,6 @@ export default async function ProfilePage({ params }: PageProps) {
             <TopicCloud topics={topTopics} />
           </div>
           <div className="animate-fade-up stagger-6">
-            <ActivityGraph timeline={activityTimeline} />
-          </div>
-          <div className="animate-fade-up stagger-7">
             <SocialLinks user={user} />
           </div>
         </div>

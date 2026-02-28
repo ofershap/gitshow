@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { fetchProfile, NotFoundError } from "@/lib/github";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function GET(
   _request: Request,
@@ -158,6 +158,10 @@ export async function GET(
       {
         width: 920,
         height: 112,
+        headers: {
+          "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+          "CDN-Cache-Control": "public, max-age=86400",
+        },
       }
     );
   } catch (error) {

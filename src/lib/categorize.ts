@@ -26,8 +26,10 @@ const RULES: CategoryRule[] = [
     emoji: "⚡",
     priority: 9,
     match: (r) =>
-      r.topics.some((t) => ["github-action", "action", "github-actions"].includes(t)) ||
-      lc(r.name).includes("-action"),
+      r.topics.some((t) => ["github-action", "action", "github-actions", "ci-cd", "ci", "automation"].includes(t)) ||
+      lc(r.name).includes("-action") ||
+      lc(r.name).includes("changelog") ||
+      descMatch(r.description, /\b(github.?action|pull.?request|ci\/cd|automat)/i),
   },
   {
     label: "AI & ML",
@@ -40,7 +42,7 @@ const RULES: CategoryRule[] = [
       lc(r.name).includes("openai") ||
       lc(r.name).includes("langchain") ||
       r.topics.some((t) =>
-        ["ai", "ai-agent", "machine-learning", "openai", "llm", "deep-learning", "chatgpt", "claude", "claude-code", "anthropic", "gpt-4", "cursor-plugin", "cursor-ide", "best-practices"].includes(t)
+        ["ai", "ai-agent", "machine-learning", "openai", "llm", "deep-learning", "chatgpt", "claude", "claude-code", "anthropic", "gpt-4", "cursor-plugin", "cursor-ide"].includes(t)
       ) ||
       lc(r.name).includes("cursor") ||
       descMatch(r.description, /\b(ai|llm|gpt|machine.?learn|neural|model|inference|cursor|claude|agent)\b/i),

@@ -9,7 +9,7 @@ interface ShareBarProps {
 
 export function ShareBar({ user }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
-  const url = `https://gitshow.vercel.app/${user.login}`;
+  const url = `https://gitshow.dev/${user.login}`;
   const text = `Check out ${user.name ?? user.login}'s open source portfolio`;
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;

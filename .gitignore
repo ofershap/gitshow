@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# marketing
+/marketing
+
+# internal
+/.claude/
+/scripts/
+src/components/repo/REPO_SHOWROOM_SPEC.md

@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-const EXAMPLES = ["torvalds", "sindresorhus", "tj", "yyx990803"];
+const EXAMPLES = [
+  "torvalds",
+  "vercel/next.js",
+  "sindresorhus",
+  "facebook/react",
+  "tj",
+  "denoland/deno",
+  "yyx990803",
+  "tailwindlabs/tailwindcss",
+];
 
 export function UrlSwap() {
   const [index, setIndex] = useState(0);
@@ -35,7 +44,7 @@ export function UrlSwap() {
     };
   }, []);
 
-  const username = EXAMPLES[index];
+  const path = EXAMPLES[index];
   const domain = phase === "gitshow" ? "gitshow.dev" : "github.com";
   const isActive = phase === "gitshow" || phase === "swap";
 
@@ -72,7 +81,7 @@ export function UrlSwap() {
           {domain}
         </span>
         <span className="text-zinc-600">/</span>
-        <span className="text-amber-400">{username}</span>
+        <span className="text-amber-400">{path}</span>
       </div>
     </div>
   );

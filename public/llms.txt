@@ -1,0 +1,97 @@
+# GitShow — Beautiful Developer Portfolio & Repository Showroom from Any GitHub Profile or Repo
+
+> GitShow transforms any public GitHub profile into a stunning, auto-generated developer portfolio, and any public repository into an open source showroom. Replace github.com with gitshow.dev in any profile or repo URL — no signup, no config, no deploy.
+
+GitShow pulls data from the GitHub API and npm registry to show what GitHub doesn't: npm download stats, smart repo categorization, tech stack visualization, focus areas, project timelines, open source contribution history, and per-repo showrooms with team, languages, commit activity, community health, and latest releases.
+
+## How It Works
+
+Replace `github.com` with `gitshow.dev` in any GitHub URL:
+- github.com/username → gitshow.dev/username (developer portfolio)
+- github.com/owner/repo → gitshow.dev/owner/repo (repository showroom)
+- Works for any public GitHub user, organization, or repository
+- Data refreshes every hour via ISR caching
+
+## Key Pages
+
+- **Homepage**
+  https://gitshow.dev
+  Landing page with URL swap demo, search input, featured developer profiles, and popular repositories.
+
+- **Developer Portfolio**
+  https://gitshow.dev/{username}
+  Auto-generated portfolio for any GitHub user showing repos grouped by category, npm downloads, tech stack, focus areas, activity timeline, and open source contributions.
+
+- **Repository Showroom**
+  https://gitshow.dev/{owner}/{repo}
+  Auto-generated landing page for any public repository showing: team (contributors with avatars), language breakdown bar, commit activity sparkline, community health score, latest release, license, topics, recent issues and pull requests, and a structured agent summary.
+
+- **README Badge API**
+  https://gitshow.dev/api/card/{username}
+  Dynamic PNG card (460×56) showing avatar, name, and top stats. Embeddable in any GitHub README.
+
+- **Social Preview API (Profiles)**
+  https://gitshow.dev/api/og/{username}
+  Dynamic 1200×630 OG image for profile sharing on Twitter and LinkedIn.
+
+- **Social Preview API (Repos)**
+  https://gitshow.dev/api/og/{owner}/{repo}
+  Dynamic 1200×630 OG image for repository sharing with stats, contributors, and languages.
+
+## Featured Profiles
+
+- https://gitshow.dev/sindresorhus — Sindre Sorhus, 1000+ npm packages
+- https://gitshow.dev/torvalds — Linus Torvalds, creator of Linux and Git
+- https://gitshow.dev/tj — TJ Holowaychuk, creator of Express.js
+- https://gitshow.dev/kelseyhightower — Kelsey Hightower, Kubernetes advocate
+- https://gitshow.dev/ThePrimeagen — ThePrimeagen, developer content creator
+
+## Featured Repositories
+
+- https://gitshow.dev/vercel/next.js — Next.js, the React framework
+- https://gitshow.dev/facebook/react — React, a JavaScript library for building user interfaces
+- https://gitshow.dev/tailwindlabs/tailwindcss — Tailwind CSS, a utility-first CSS framework
+- https://gitshow.dev/denoland/deno — Deno, a secure runtime for JavaScript and TypeScript
+- https://gitshow.dev/vitejs/vite — Vite, next generation frontend tooling
+
+## Features
+
+### Developer Portfolios
+- npm download statistics across all packages
+- Smart repo categorization (MCP Servers, CLI Tools, React & UI, DevOps, AI & ML, etc.)
+- Open source contributions to external projects (last 12 months)
+- Tech stack language breakdown
+- Focus areas topic cloud
+- Project creation timeline
+- Dynamic OG social cards for sharing
+- README badge card for embedding
+- One-click share to X and LinkedIn
+
+### Repository Showrooms
+- Team display with contributor avatars and commit counts
+- Language breakdown with colored bar chart
+- Weekly commit activity sparkline (last 12 weeks)
+- Community health score with file checklist
+- Latest release tag and link
+- License and topic pills
+- Recent issues and pull requests with status
+- Homepage URL (when available)
+- Structured agent summary for LLM consumption
+
+## Technical Details
+
+- Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4
+- Server-rendered with Incremental Static Regeneration (1h cache)
+- Uses GitHub REST API for profiles, repos, contributors, languages, releases, community profile, and participation stats
+- Uses GitHub GraphQL API for contributions
+- Uses npm registry API for download statistics
+- Schema.org structured data: WebSite, SoftwareApplication, FAQPage, ProfilePage, SoftwareSourceCode, BreadcrumbList
+- Deployed on Vercel
+- Open source under MIT license
+
+## Source Code
+
+https://github.com/ofershap/gitshow
+
+# Sitemap
+Sitemap: https://gitshow.dev/sitemap.xml

@@ -36,6 +36,7 @@ Replace `github.com` with `gitshow.dev` in any profile URL. No signup, no config
 |---------|-------------|
 | **npm downloads** | Total downloads/month across all your packages, with per-package bar chart |
 | **Smart categories** | Repos auto-grouped: MCP Servers, CLI Tools, React & UI, DevOps, i18n... |
+| **OS contributions** | Commits and PRs to other people's repos — what you give back to open source |
 | **Focus areas** | Aggregated topic cloud showing what you specialize in |
 | **Project timeline** | When you shipped projects — your creation velocity |
 | **Tech stack bar** | Visual language breakdown across all repos |
@@ -44,6 +45,8 @@ Replace `github.com` with `gitshow.dev` in any profile URL. No signup, no config
 | **Share buttons** | One-click share to X, LinkedIn, or copy link |
 
 Forks and archived repos are automatically filtered out. Only your original work is shown.
+
+The contributions section uses GitHub's GraphQL API to pull the last 12 months of activity. If a user contributes more to external projects than they have of their own, contributions are promoted to the top of the page.
 
 ---
 
@@ -84,9 +87,9 @@ Browser request
     ↓
 Next.js App Router (Vercel Edge)
     ↓
-GitHub REST API (/users, /repos)  +  npm Registry API
+GitHub REST API (/users, /repos) + GraphQL API (contributions) + npm Registry
     ↓
-Auto-categorize repos by language, topics, description
+Auto-categorize repos + fetch OS contributions + npm stats
     ↓
 Server-rendered portfolio page
     ↓
@@ -99,8 +102,23 @@ ISR cache (1 hour TTL)
 | **React 19** | Zero client JS on portfolio pages (except share/expand) |
 | **Tailwind CSS 4** | Dark theme, responsive layout |
 | **Vercel OG** | Dynamic social preview image generation (Satori) |
-| **GitHub API** | Profile + repos data, cached with `revalidate: 3600` |
+| **GitHub REST API** | Profile + repos data, cached with `revalidate: 3600` |
+| **GitHub GraphQL API** | Open source contributions (last 12 months) |
 | **npm Registry** | Package search + download counts per maintainer |
+
+## GEO & LLM Readiness
+
+GitShow is optimized for both traditional search engines and AI-powered search (ChatGPT, Perplexity, Claude, Gemini):
+
+| Signal | Implementation |
+|--------|---------------|
+| **`llms.txt`** | Structured context file at `/llms.txt` for LLM inference |
+| **AI crawler access** | `robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended |
+| **Schema.org JSON-LD** | `SoftwareApplication` with `featureList`, `FAQPage`, `ProfilePage`, `Person`, `BreadcrumbList` |
+| **OpenGraph + Twitter** | Dynamic per-profile OG images and meta descriptions |
+| **SSR** | All content server-rendered — no JS required for AI crawlers |
+| **Canonical URLs** | Every profile has a canonical `https://gitshow.dev/{username}` |
+| **Sitemap** | Auto-generated with featured profiles |
 
 ---
 
@@ -132,10 +150,14 @@ npm run dev    # → http://localhost:3000
 ## Project Structure
 
 ```
+public/
+├── llms.txt                        # LLM context file for AI search engines
 src/
 ├── app/
 │   ├── page.tsx                    # Landing page — URL swap animation, search
-│   ├── layout.tsx                  # Root layout — dark theme, Geist font
+│   ├── layout.tsx                  # Root layout — dark theme, fonts
+│   ├── robots.ts                   # Robots config with AI crawler rules
+│   ├── sitemap.ts                  # Auto-generated sitemap
 │   ├── [username]/
 │   │   ├── page.tsx                # Portfolio page (SSR + ISR)
 │   │   ├── loading.tsx             # Spinner while loading
@@ -149,17 +171,19 @@ src/
 ├── components/
 │   ├── hero-card.tsx               # Avatar, name, bio, aggregate stats + npm
 │   ├── category-section.tsx        # Auto-grouped repos with expand/collapse
+│   ├── contributions-card.tsx      # OS contributions with smart positioning
 │   ├── npm-card.tsx                # npm download stats with bar chart
 │   ├── tech-stack.tsx              # Language breakdown bar + legend
 │   ├── topic-cloud.tsx             # Weighted focus areas cloud
 │   ├── activity-graph.tsx          # Project creation timeline
 │   ├── share-bar.tsx               # Share to X, LinkedIn, copy link
 │   ├── social-links.tsx            # GitHub, Twitter, LinkedIn, website
+│   ├── json-ld.tsx                 # Schema.org structured data (FAQ, App, Profile)
 │   ├── url-swap.tsx                # Animated URL swap (landing page)
 │   ├── username-input.tsx          # Search input (landing page)
 │   └── footer.tsx                  # Attribution
 ├── lib/
-│   ├── github.ts                   # GitHub API client with caching
+│   ├── github.ts                   # GitHub REST + GraphQL API client
 │   ├── npm.ts                      # npm registry API client
 │   ├── categorize.ts               # Smart repo categorization engine
 │   ├── types.ts                    # TypeScript interfaces

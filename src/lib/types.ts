@@ -48,6 +48,22 @@ export interface NpmStats {
   packages: { name: string; downloads: number }[];
 }
 
+export interface RepoContribution {
+  nameWithOwner: string;
+  stargazersCount: number;
+  primaryLanguage: string | null;
+  commitCount: number;
+  url: string;
+}
+
+export interface ContributionsData {
+  totalCommits: number;
+  totalPullRequests: number;
+  totalIssues: number;
+  totalReposContributedTo: number;
+  topRepos: RepoContribution[];
+}
+
 export interface ProfileData {
   user: GitHubUser;
   repos: GitHubRepo[];
@@ -58,4 +74,5 @@ export interface ProfileData {
   npmStats: NpmStats | null;
   topTopics: { name: string; count: number }[];
   activityTimeline: { month: string; count: number }[];
+  contributions: ContributionsData | null;
 }

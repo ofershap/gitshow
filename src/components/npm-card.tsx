@@ -10,15 +10,24 @@ export function NpmCard({ stats }: NpmCardProps) {
   const topPackages = stats.packages.slice(0, 8);
 
   return (
-    <div className="card-hover overflow-hidden rounded-2xl" style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}>
+    <div
+      className="card-hover overflow-hidden rounded-2xl"
+      style={{
+        background: "var(--color-surface-raised)",
+        border: "1px solid var(--color-border)",
+        borderLeftWidth: "3px",
+        borderLeftColor: "rgba(239, 68, 68, 0.5)",
+      }}
+    >
       <div
-        className="flex items-center justify-between px-5 py-3"
+        className="relative flex items-center justify-between px-5 py-3"
         style={{ borderBottom: "1px solid var(--color-border)" }}
       >
-        <h3 className="font-display font-semibold text-white flex items-center gap-2">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-red-500/[0.04] to-transparent" />
+        <h3 className="relative font-display font-semibold text-white flex items-center gap-2">
           <span className="text-red-400 font-bold">npm</span> Packages
         </h3>
-        <div className="text-right">
+        <div className="relative text-right">
           <div className="font-display text-lg font-bold text-white">
             {formatNumber(stats.totalDownloads)}
           </div>

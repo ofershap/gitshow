@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { DM_Sans, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, Outfit, JetBrains_Mono } from "next/font/google";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -8,8 +9,8 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -23,12 +24,18 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://gitshow.dev"),
   title: {
-    default: "GitShow — Your GitHub, beautifully shown",
+    default: "GitShow — Developer Portfolio & Repository Showroom from Any GitHub Profile or Repo",
     template: "%s — GitShow",
   },
   description:
-    "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio. Open source, no signup required.",
+    "Turn any GitHub profile into a developer portfolio, or any repo into an open source showroom. npm download stats, smart repo categorization, team display, language breakdown, commit activity, community health. Free, open source, no signup.",
   applicationName: "GitShow",
+  keywords: [
+    "GitHub portfolio", "developer portfolio", "GitHub profile", "npm downloads",
+    "open source contributions", "GitHub stats", "developer tools", "README badge",
+    "GitHub visualization", "tech stack", "gitshow", "repository showroom",
+    "open source project page", "GitHub repo landing page",
+  ],
   authors: [{ name: "Ofer Shapira", url: "https://github.com/ofershap" }],
   creator: "Ofer Shapira",
   robots: {
@@ -46,9 +53,9 @@ export const metadata: Metadata = {
     canonical: "https://gitshow.dev",
   },
   openGraph: {
-    title: "GitShow — Your GitHub, beautifully shown",
+    title: "GitShow — Developer Portfolio from Any GitHub Profile",
     description:
-      "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
+      "npm stats, repo categorization, OS contributions, tech stack, README badges. Replace github.com with gitshow.dev.",
     type: "website",
     url: "https://gitshow.dev",
     siteName: "GitShow",
@@ -58,7 +65,7 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "GitShow — Your GitHub, beautifully shown",
+        alt: "GitShow developer portfolio generator - npm stats, repo categories, OS contributions",
       },
     ],
   },
@@ -66,9 +73,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@ofaborsh",
     creator: "@ofaborsh",
-    title: "GitShow — Your GitHub, beautifully shown",
+    title: "GitShow — Developer Portfolio from Any GitHub Profile",
     description:
-      "Replace github.com with gitshow.dev in any profile URL to get a stunning developer portfolio.",
+      "npm stats, repo categorization, OS contributions, tech stack, README badges. Free and open source.",
     images: ["/api/og"],
   },
 };
@@ -81,10 +88,11 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ colorScheme: "dark" }}>
       <body
-        className={`${dmSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} relative min-h-screen font-sans antialiased`}
+        className={`${dmSans.variable} ${outfit.variable} ${jetbrainsMono.variable} relative min-h-screen font-sans antialiased`}
         style={{ backgroundColor: "var(--color-surface)", color: "#e2e8f0" }}
       >
         {children}
+        <ScrollToTop />
       </body>
     </html>
   );

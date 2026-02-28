@@ -23,6 +23,23 @@ const FEATURED_PROFILES = [
   "fireship-io",
 ];
 
+const FEATURED_REPOS = [
+  "vercel/next.js",
+  "facebook/react",
+  "denoland/deno",
+  "tailwindlabs/tailwindcss",
+  "vuejs/core",
+  "sveltejs/svelte",
+  "oven-sh/bun",
+  "withastro/astro",
+  "vitejs/vite",
+  "drizzle-team/drizzle-orm",
+  "trpc/trpc",
+  "colinhacks/zod",
+  "honojs/hono",
+  "modelcontextprotocol/servers",
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://gitshow.dev";
 
@@ -44,5 +61,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   );
 
-  return [...staticPages, ...profilePages];
+  const repoPages: MetadataRoute.Sitemap = FEATURED_REPOS.map(
+    (slug) => ({
+      url: `${base}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    }),
+  );
+
+  return [...staticPages, ...profilePages, ...repoPages];
 }

@@ -9,7 +9,16 @@ export function TechStack({ languages }: TechStackProps) {
   const totalPercentage = top.reduce((s, l) => s + l.percentage, 0);
 
   return (
-    <div className="card-hover rounded-2xl p-5" style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}>
+    <div className="card-hover rounded-2xl overflow-hidden" style={{ background: "var(--color-surface-raised)", border: "1px solid var(--color-border)" }}>
+      <div
+        className="h-[2px]"
+        style={{
+          background: top.length > 0
+            ? `linear-gradient(90deg, ${top.map((l) => l.color).join(', ')})`
+            : "var(--color-border)",
+        }}
+      />
+      <div className="p-5">
       <h3 className="font-display font-semibold text-white mb-4">Tech Stack</h3>
 
       <div className="h-3.5 rounded-full overflow-hidden flex" style={{ background: "rgba(255,255,255,0.04)" }}>
@@ -39,6 +48,7 @@ export function TechStack({ languages }: TechStackProps) {
             </span>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
