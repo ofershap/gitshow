@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { fetchProfile, NotFoundError } from "@/lib/github";
+import { categorizeRepos } from "@/lib/categorize";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 export async function GET(
   _request: Request,
@@ -13,7 +14,10 @@ export async function GET(
     const data = await fetchProfile(username);
     const { user, totalStars, totalForks, repos, npmStats } = data;
 
-    const stats = buildStats(repos.length, totalStars, totalForks, user.followers, npmStats?.totalDownloads ?? 0);
+    const categories = categorizeRepos(repos);
+    const repoCount = categories.reduce((sum, c) => sum + c.repos.length, 0);
+
+    const stats = buildStats(repoCount, totalStars, totalForks, user.followers, npmStats?.totalDownloads ?? 0);
 
     return new ImageResponse(
       <div
@@ -159,8 +163,8 @@ export async function GET(
         width: 920,
         height: 112,
         headers: {
-          "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
-          "CDN-Cache-Control": "public, max-age=86400",
+          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "CDN-Cache-Control": "public, max-age=3600",
         },
       }
     );

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { RepoShowroomData } from "@/lib/repo-types";
 import { CloneButton } from "./CloneButton";
 
@@ -28,8 +27,9 @@ export function RepoHero({ data }: RepoHeroProps) {
           rel="noopener noreferrer"
           className="mb-6 rounded-2xl ring-2 ring-white/10 transition hover:ring-teal-500/40"
         >
-          <Image
-            src={repo.owner.avatar_url}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${repo.owner.avatar_url}&s=160`}
             alt={repo.owner.login}
             width={80}
             height={80}

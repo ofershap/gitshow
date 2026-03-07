@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { GitHubUser, NpmStats } from "@/lib/types";
 import { formatNumber, memberSince } from "@/lib/utils";
 
@@ -55,13 +54,13 @@ export function HeroCard({
           {/* Avatar with glow ring + rank badge */}
           <div className="relative shrink-0">
             <div className="rounded-2xl animate-pulse-glow">
-              <Image
-                src={user.avatar_url}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${user.avatar_url}&s=280`}
                 alt={user.name ?? user.login}
                 width={140}
                 height={140}
                 className="rounded-2xl ring-2 ring-teal-500/30 transition-transform duration-300 hover:scale-105"
-                priority
               />
             </div>
             <div className="absolute -bottom-2 -right-2 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-white shadow-lg shadow-teal-500/25">

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type {
   RepoShowroomActivity,
   RepoShowroomData,
@@ -100,8 +99,9 @@ export function DiscussionList({
                   rel="noopener noreferrer"
                   className="shrink-0"
                 >
-                  <Image
-                    src={item.user.avatar_url}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`${item.user.avatar_url}&s=88`}
                     alt={item.user.login}
                     width={44}
                     height={44}

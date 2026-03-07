@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { RepoContributor } from "@/lib/repo-types";
 import { formatNumber } from "@/lib/utils";
 
@@ -47,8 +46,9 @@ export function TeamSection({ contributors, contributorCount, repoUrl }: TeamSec
               className="group flex flex-col items-center text-center"
             >
               <div className="relative mb-3">
-                <Image
-                  src={c.avatar_url}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${c.avatar_url}&s=144`}
                   alt={c.login}
                   width={72}
                   height={72}

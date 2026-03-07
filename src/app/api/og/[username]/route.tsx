@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { fetchProfile, NotFoundError } from "@/lib/github";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 export async function GET(
   _request: Request,
@@ -11,9 +11,10 @@ export async function GET(
 
   try {
     const data = await fetchProfile(username);
-    const { user, totalStars, totalForks, repos, languages, categories, npmStats } = data;
+    const { user, totalStars, totalForks, languages, categories, npmStats } = data;
     const topLangs = languages.slice(0, 4);
     const topCategories = categories.slice(0, 4);
+    const repoCount = categories.reduce((sum, c) => sum + c.repos.length, 0);
 
     const rank = starRank(totalStars);
 
@@ -189,7 +190,7 @@ export async function GET(
               position: "relative",
             }}
           >
-            <StatBox icon="📦" value={repos.length.toString()} label="Projects" color="#14b8a6" />
+            <StatBox icon="📦" value={repoCount.toString()} label="Projects" color="#14b8a6" />
             <StatBox icon="⭐" value={fmtNum(totalStars)} label="Stars" color="#f59e0b" />
             <StatBox icon="🍴" value={fmtNum(totalForks)} label="Forks" color="#06b6d4" />
             <StatBox icon="👥" value={fmtNum(user.followers)} label="Followers" color="#10b981" />
@@ -329,8 +330,8 @@ export async function GET(
         width: 1200,
         height: 630,
         headers: {
-          "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
-          "CDN-Cache-Control": "public, max-age=86400",
+          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "CDN-Cache-Control": "public, max-age=3600",
         },
       }
     );
