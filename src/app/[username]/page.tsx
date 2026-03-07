@@ -103,7 +103,7 @@ export default async function ProfilePage({ params }: PageProps) {
           user={user}
           totalStars={totalStars}
           totalForks={totalForks}
-          repoCount={repos.length}
+          repoCount={categories.reduce((sum, c) => sum + c.repos.length, 0)}
           npmStats={npmStats}
         />
       </div>
@@ -127,7 +127,7 @@ export default async function ProfilePage({ params }: PageProps) {
           )}
           {npmStats && npmStats.packages.length > 0 && (
             <div className="animate-fade-up stagger-3">
-              <NpmCard stats={npmStats} />
+              <NpmCard stats={npmStats} username={user.login} />
             </div>
           )}
           <div className="animate-fade-up stagger-4">

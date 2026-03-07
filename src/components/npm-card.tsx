@@ -3,9 +3,10 @@ import { formatNumber } from "@/lib/utils";
 
 interface NpmCardProps {
   stats: NpmStats;
+  username?: string;
 }
 
-export function NpmCard({ stats }: NpmCardProps) {
+export function NpmCard({ stats, username }: NpmCardProps) {
   const maxDownloads = Math.max(...stats.packages.map((p) => p.downloads));
   const topPackages = stats.packages.slice(0, 8);
 
@@ -69,12 +70,15 @@ export function NpmCard({ stats }: NpmCardProps) {
       </div>
 
       {stats.packages.length > 8 && (
-        <div
-          className="py-2.5 text-center text-[11px] text-gray-500"
+        <a
+          href={username ? `https://www.npmjs.com/~${username}` : "https://www.npmjs.com"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block py-2.5 text-center text-[11px] text-gray-500 hover:text-emerald-400 transition-colors cursor-pointer"
           style={{ borderTop: "1px solid var(--color-border)" }}
         >
-          +{stats.packages.length - 8} more packages
-        </div>
+          +{stats.packages.length - 8} more packages →
+        </a>
       )}
     </div>
   );
