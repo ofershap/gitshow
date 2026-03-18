@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { fetchProfile, NotFoundError } from "@/lib/github";
 import { categorizeRepos } from "@/lib/categorize";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function GET(
   _request: Request,
@@ -163,8 +163,8 @@ export async function GET(
         width: 920,
         height: 112,
         headers: {
-          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
-          "CDN-Cache-Control": "public, max-age=3600",
+          "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+          "CDN-Cache-Control": "public, max-age=86400",
         },
       }
     );

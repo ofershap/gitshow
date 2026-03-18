@@ -12,8 +12,17 @@ import { CommunityHealth } from "@/components/repo/CommunityHealth";
 import { RepoAgentSummary } from "@/components/repo/RepoAgentSummary";
 import { Footer } from "@/components/footer";
 import { JsonLd, repoShowroomJsonLd } from "@/components/json-ld";
+import { FEATURED_REPOS } from "@/app/sitemap";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
+export const dynamicParams = true;
+
+export function generateStaticParams() {
+  return FEATURED_REPOS.map((slug) => {
+    const [username, repo] = slug.split("/");
+    return { username, repo };
+  });
+}
 
 interface PageProps {
   params: Promise<{ username: string; repo: string }>;
@@ -34,7 +43,7 @@ export async function generateMetadata({
         ? `${data.repo.description} — ${data.repo.stargazers_count} stars, ${data.contributors.length} contributors.${langInfo}`
         : `Open source project: ${data.repo.stargazers_count} stars, ${data.contributors.length} contributors.${langInfo}`;
 
-    const ogImage = `/api/og/${owner}/${repo}?v=${Math.floor(Date.now() / 3600000)}`;
+    const ogImage = `/api/og/${owner}/${repo}?v=${Math.floor(Date.now() / 86400000)}`;
 
     return {
       title,

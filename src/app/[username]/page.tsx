@@ -11,8 +11,14 @@ import { SocialLinks } from "@/components/social-links";
 import { Footer } from "@/components/footer";
 import { JsonLd, profilePageJsonLd } from "@/components/json-ld";
 import { ContributionsCard, shouldShowContributions, shouldShowContributionsFirst } from "@/components/contributions-card";
+import { FEATURED_PROFILES } from "@/app/sitemap";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
+export const dynamicParams = true;
+
+export function generateStaticParams() {
+  return FEATURED_PROFILES.map((username) => ({ username }));
+}
 
 interface PageProps {
   params: Promise<{ username: string }>;
@@ -33,7 +39,7 @@ export async function generateMetadata({
       : "";
     const description = `${displayName}'s open source portfolio: ${repos.length} projects, ${totalStars} stars${contribMeta}${user.bio ? `. ${user.bio}` : ""}`;
 
-    const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 3600000)}`;
+    const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 86400000)}`;
 
     return {
       title,

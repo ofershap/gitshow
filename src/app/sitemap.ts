@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-const FEATURED_PROFILES = [
+export const FEATURED_PROFILES = [
+  "ofershap",
   "torvalds",
   "sindresorhus",
   "tj",
@@ -23,7 +24,7 @@ const FEATURED_PROFILES = [
   "fireship-io",
 ];
 
-const FEATURED_REPOS = [
+export const FEATURED_REPOS = [
   "vercel/next.js",
   "facebook/react",
   "denoland/deno",

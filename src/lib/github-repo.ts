@@ -62,7 +62,7 @@ async function repoFetch<T>(path: string): Promise<T> {
 
   const res = await fetch(`${GITHUB_API}${path}`, {
     headers,
-    next: { revalidate: 3600 },
+    next: { revalidate: 86400 },
   });
 
   if (res.status === 404) throw new RepoNotFoundError("Repository not found");
@@ -159,7 +159,7 @@ async function fetchContributorCount(owner: string, repo: string): Promise<numbe
 
   const res = await fetch(
     `${GITHUB_API}/repos/${owner}/${repo}/contributors?per_page=1&anon=true`,
-    { headers, next: { revalidate: 3600 } }
+    { headers, next: { revalidate: 86400 } }
   );
 
   if (!res.ok) return 0;

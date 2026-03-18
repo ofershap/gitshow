@@ -17,7 +17,7 @@ export async function fetchNpmStats(
   try {
     const res = await fetch(
       `https://registry.npmjs.org/-/v1/search?text=maintainer:${username}&size=250`,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 86400 } }
     );
     if (!res.ok) return null;
 
@@ -40,7 +40,7 @@ export async function fetchNpmStats(
           try {
             const r = await fetch(
               `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`,
-              { next: { revalidate: 3600 } }
+              { next: { revalidate: 86400 } }
             );
             if (!r.ok) return { name, downloads: 0 };
             const d: NpmDownloads = await r.json();
