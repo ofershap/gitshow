@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const GITHUB_URL_RE =
-  /^https?:\/\/(?:www\.)?github\.com\/([a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)\/?$/;
+  /^https?:\/\/(?:www\.)?github\.com\/([a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\/[a-zA-Z0-9][a-zA-Z0-9_.-]*)?)\/?$/;
 
 const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 20;
@@ -32,7 +32,7 @@ function extractUsername(input: string): string | null {
   return null;
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname, searchParams, search } = request.nextUrl;
 
   if (pathname.startsWith("/api/")) {

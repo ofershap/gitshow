@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   GitHubUser,
   GitHubRepo,
@@ -63,7 +64,7 @@ async function githubFetch<T>(path: string): Promise<T> {
     throw new NotFoundError(`GitHub user not found`);
   }
 
-  if (res.status === 403) {
+  if (res.status === 403 || res.status === 429) {
     throw new RateLimitError("GitHub API rate limit exceeded");
   }
 
@@ -261,7 +262,7 @@ function computeTimeline(
     .slice(-12);
 }
 
-export async function fetchProfile(username: string): Promise<ProfileData> {
+export const fetchProfile = cache(async (username: string): Promise<ProfileData> => {
   const [user, repos] = await Promise.all([
     githubFetch<GitHubUser>(`/users/${username}`),
     fetchAllRepos(username),
@@ -298,4 +299,4 @@ export async function fetchProfile(username: string): Promise<ProfileData> {
     activityTimeline,
     contributions,
   };
-}
+});

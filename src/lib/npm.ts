@@ -26,34 +26,43 @@ export async function fetchNpmStats(
 
     if (packageNames.length === 0) return null;
 
-    const BATCH_SIZE = 50;
-    const batches: string[][] = [];
-    for (let i = 0; i < Math.min(packageNames.length, 200); i += BATCH_SIZE) {
-      batches.push(packageNames.slice(i, i + BATCH_SIZE));
-    }
+    const limitedNames = packageNames.slice(0, 200);
+    const CONCURRENCY = 6;
+    const results: { name: string; downloads: number }[] = new Array(
+      limitedNames.length
+    );
+    let nextIndex = 0;
 
-    const allPackages: { name: string; downloads: number }[] = [];
-
-    for (const batch of batches) {
-      const results = await Promise.all(
-        batch.map(async (name) => {
-          try {
-            const r = await fetch(
-              `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`,
-              { next: { revalidate: 86400 } }
-            );
-            if (!r.ok) return { name, downloads: 0 };
-            const d: NpmDownloads = await r.json();
-            return { name: d.package, downloads: d.downloads };
-          } catch {
-            return { name, downloads: 0 };
+    async function worker() {
+      while (true) {
+        const i = nextIndex++;
+        if (i >= limitedNames.length) break;
+        const name = limitedNames[i];
+        try {
+          const r = await fetch(
+            `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`,
+            { next: { revalidate: 86400 } }
+          );
+          if (!r.ok) {
+            results[i] = { name, downloads: 0 };
+            continue;
           }
-        })
-      );
-      allPackages.push(...results);
+          const d: NpmDownloads = await r.json();
+          results[i] = { name: d.package, downloads: d.downloads };
+        } catch {
+          results[i] = { name, downloads: 0 };
+        }
+      }
     }
 
-    const sorted = allPackages
+    await Promise.all(
+      Array.from(
+        { length: Math.min(CONCURRENCY, limitedNames.length) },
+        () => worker()
+      )
+    );
+
+    const sorted = results
       .filter((p) => p.downloads > 0)
       .sort((a, b) => b.downloads - a.downloads);
     const totalDownloads = sorted.reduce((sum, p) => sum + p.downloads, 0);

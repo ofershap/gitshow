@@ -3,15 +3,42 @@
 import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 
+function parseGitHubInput(raw: string): string | null {
+  let trimmed = raw.trim();
+  if (!trimmed) return null;
+
+  if (trimmed.startsWith("@")) {
+    trimmed = trimmed.slice(1).trim();
+    if (!trimmed) return null;
+  }
+
+  const urlMatch = trimmed.match(
+    /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/?#]+(?:\/[^/?#]+)?)\/?$/i
+  );
+  if (urlMatch) {
+    return `/${urlMatch[1]}`;
+  }
+
+  if (/^[^\s/]+\/[^\s/]+$/.test(trimmed)) {
+    return `/${trimmed}`;
+  }
+
+  if (/^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(trimmed)) {
+    return `/${trimmed}`;
+  }
+
+  return null;
+}
+
 export function UsernameInput() {
   const [value, setValue] = useState("");
   const router = useRouter();
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const trimmed = value.trim().replace(/^@/, "");
-    if (trimmed) {
-      router.push(`/${trimmed}`);
+    const path = parseGitHubInput(value);
+    if (path) {
+      router.push(path);
     }
   }
 

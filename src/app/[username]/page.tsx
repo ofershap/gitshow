@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchProfile, NotFoundError } from "@/lib/github";
+import { fetchProfile, NotFoundError, RateLimitError } from "@/lib/github";
 import { HeroCard } from "@/components/hero-card";
 import { CategorySection } from "@/components/category-section";
 import { NpmCard } from "@/components/npm-card";
@@ -81,6 +81,9 @@ export default async function ProfilePage({ params }: PageProps) {
   } catch (error) {
     if (error instanceof NotFoundError) {
       notFound();
+    }
+    if (error instanceof RateLimitError) {
+      throw new Error("GitHub API rate limit exceeded");
     }
     throw error;
   }
