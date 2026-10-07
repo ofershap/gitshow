@@ -12,16 +12,14 @@ import { CommunityHealth } from "@/components/repo/CommunityHealth";
 import { RepoAgentSummary } from "@/components/repo/RepoAgentSummary";
 import { Footer } from "@/components/footer";
 import { JsonLd, repoShowroomJsonLd } from "@/components/json-ld";
-import { FEATURED_REPOS } from "@/app/sitemap";
 
 export const revalidate = 86400;
 export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return FEATURED_REPOS.map((slug) => {
-    const [username, repo] = slug.split("/");
-    return { username, repo };
-  });
+  // Generate portfolios on first request, then cache them with ISR.
+  // Builds must not depend on GitHub availability or consume its API quota.
+  return [];
 }
 
 interface PageProps {
