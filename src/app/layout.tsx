@@ -24,11 +24,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://gitshow.dev"),
   title: {
-    default: "GitShow — Developer Portfolio & Repository Showroom from Any GitHub Profile or Repo",
+    default: "GitShow - GitHub Portfolios & Repository Showrooms",
     template: "%s — GitShow",
   },
   description:
-    "Turn any GitHub profile into a developer portfolio, or any repo into an open source showroom. npm download stats, smart repo categorization, team display, language breakdown, commit activity, community health. Free, open source, no signup.",
+    "Turn GitHub profiles and repos into portfolios and project showrooms with npm stats, repo categories, and tech stacks. Free, open source, no signup.",
   applicationName: "GitShow",
   verification: {
     other: { "msvalidate.01": "AAD3E490305203BA80DF599EC9F9067F" },
