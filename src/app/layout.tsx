@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   description:
     "Turn any GitHub profile into a developer portfolio, or any repo into an open source showroom. npm download stats, smart repo categorization, team display, language breakdown, commit activity, community health. Free, open source, no signup.",
   applicationName: "GitShow",
+  verification: {
+    other: { "msvalidate.01": "AAD3E490305203BA80DF599EC9F9067F" },
+  },
   keywords: [
     "GitHub portfolio", "developer portfolio", "GitHub profile", "npm downloads",
     "open source contributions", "GitHub stats", "developer tools", "README badge",
