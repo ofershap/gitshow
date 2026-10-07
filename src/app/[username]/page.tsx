@@ -11,13 +11,14 @@ import { SocialLinks } from "@/components/social-links";
 import { Footer } from "@/components/footer";
 import { JsonLd, profilePageJsonLd } from "@/components/json-ld";
 import { ContributionsCard, shouldShowContributions, shouldShowContributionsFirst } from "@/components/contributions-card";
-import { FEATURED_PROFILES } from "@/app/sitemap";
 
 export const revalidate = 86400;
 export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return FEATURED_PROFILES.map((username) => ({ username }));
+  // Generate portfolios on first request, then cache them with ISR.
+  // Builds must not depend on GitHub availability or consume its API quota.
+  return [];
 }
 
 interface PageProps {
