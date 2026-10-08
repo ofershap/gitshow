@@ -1,0 +1,16 @@
+{
+  "name": "GitShow",
+  "description": "GitShow turns any public GitHub profile into a developer portfolio and any public repository into an open source showroom. Replace github.com with gitshow.dev in any profile or repo URL - no signup, no config. Adds what GitHub does not show: npm download stats, smart repo categorization, tech stack visualization, focus areas, activity timelines, and open source contribution history.",
+  "url": "https://gitshow.dev",
+  "provider": { "organization": "Ofer Shapira", "url": "https://github.com/ofershap" },
+  "version": "1.0.0",
+  "capabilities": { "streaming": false, "pushNotifications": false },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/html", "image/png"],
+  "skills": [
+    { "id": "developer-portfolio", "name": "Developer portfolio", "description": "GET https://gitshow.dev/{username} renders a portfolio for any public GitHub user." },
+    { "id": "repo-showroom", "name": "Repository showroom", "description": "GET https://gitshow.dev/{owner}/{repo} renders a landing page for any public repo." },
+    { "id": "readme-badge", "name": "README badge", "description": "GET https://gitshow.dev/api/card/{username} returns a 460x56 PNG badge for README embeds." },
+    { "id": "og-image", "name": "Social preview image", "description": "GET https://gitshow.dev/api/og/{username} or /api/og/{owner}/{repo} returns a 1200x630 PNG." }
+  ]
+}
