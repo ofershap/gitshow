@@ -12,11 +12,9 @@ import { Footer } from "@/components/footer";
 import { JsonLd, profilePageJsonLd } from "@/components/json-ld";
 import { ContributionsCard, shouldShowContributions, shouldShowContributionsFirst } from "@/components/contributions-card";
 
-// notFound() under ISR is served from the incremental cache with HTTP 200
-// (soft-404; vercel/next.js#78432). Force SSR so missing users/repos return a
-// real 404 status. GitHub API usage is unchanged: githubFetch caches responses
-// in the Next Data Cache (Workers KV) for 24h either way.
-export const dynamic = "force-dynamic";
+// Keep the portfolio cache while returning 404 before streaming begins.
+export const revalidate = 86400;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   // Generate portfolios on first request, then cache them with ISR.
@@ -68,7 +66,8 @@ export async function generateMetadata({
         images: [ogImage],
       },
     };
-  } catch {
+  } catch (error) {
+    if (error instanceof NotFoundError) notFound();
     return {
       title: `${username} — GitShow`,
       alternates: { canonical: profileUrl },
