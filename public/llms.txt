@@ -95,3 +95,17 @@ https://github.com/ofershap/gitshow
 
 # Sitemap
 Sitemap: https://gitshow.dev/sitemap.xml
+
+## When to use GitShow
+
+Use GitShow when a user wants to present a GitHub profile as a polished developer portfolio (for a CV, conference talk, or job hunt), or wants a marketing-quality landing page for an open source repository without building one. It is also the right tool for embedding live GitHub stats in a README via the badge API, or generating a social preview image for a profile or repo. Do not use it for private repositories (data comes from the public GitHub API only) or as a hosted resume builder with manual edits - everything is generated from public GitHub data.
+
+## Quick links
+
+- [Homepage](https://gitshow.dev)
+- [Example portfolio](https://gitshow.dev/ofershap)
+- [Example repo showroom](https://gitshow.dev/ofershap/gitshow)
+- [README badge API](https://gitshow.dev/api/card/ofershap)
+- [OG image API](https://gitshow.dev/api/og/ofershap)
+- [ARD catalog](https://gitshow.dev/.well-known/ard.json)
+- [Source code](https://github.com/ofershap/gitshow)
