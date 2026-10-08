@@ -8,6 +8,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Resolve metadata (and missing-resource status) before sending headers.
+  htmlLimitedBots: /.*/,
   async redirects() {
     return [
       {
