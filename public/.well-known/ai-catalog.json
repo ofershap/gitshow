@@ -1,0 +1,49 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:gitshow.dev:agent:gitshow-info",
+      "displayName": "GitShow Agent Card",
+      "type": "application/a2a-agent-card+json",
+      "url": "https://gitshow.dev/.well-known/agent-card.json",
+      "description": "Agent card describing GitShow: developer portfolios and repository showrooms generated from any public GitHub URL.",
+      "representativeQueries": [
+        "turn a GitHub profile into a developer portfolio",
+        "make a landing page for an open source repository"
+      ]
+    },
+    {
+      "identifier": "urn:air:gitshow.dev:index:agent-skills",
+      "displayName": "GitShow Agent Skills Index",
+      "type": "application/json",
+      "url": "https://gitshow.dev/.well-known/agent-skills/index.json",
+      "description": "Index of GitShow's agent-facing capabilities.",
+      "representativeQueries": ["what can GitShow do for an AI agent"]
+    },
+    {
+      "identifier": "urn:air:gitshow.dev:doc:llms-txt",
+      "displayName": "GitShow llms.txt",
+      "type": "text/markdown",
+      "url": "https://gitshow.dev/llms.txt",
+      "description": "Full agent-oriented documentation of GitShow: URL-swap usage, page types, APIs.",
+      "representativeQueries": ["how do I use gitshow.dev", "what is gitshow.dev"]
+    },
+    {
+      "identifier": "urn:air:gitshow.dev:api:readme-badge",
+      "displayName": "GitShow README Badge API",
+      "type": "image/png",
+      "url": "https://gitshow.dev/api/card/{username}",
+      "capabilities": ["badge", "readme-embed"],
+      "description": "Dynamic PNG card (460x56) with avatar, name and top stats for any GitHub user. Embeddable in README files.",
+      "representativeQueries": ["generate a GitHub stats badge for my README"]
+    },
+    {
+      "identifier": "urn:air:gitshow.dev:api:og-image",
+      "displayName": "GitShow OG Image API",
+      "type": "image/png",
+      "url": "https://gitshow.dev/api/og/{username}",
+      "capabilities": ["og-image", "social-preview"],
+      "description": "Dynamic 1200x630 social preview images for GitHub profiles and repositories.",
+      "representativeQueries": ["create a social preview image for a GitHub profile"]
+    }
+  ]
+}
