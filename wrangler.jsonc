@@ -15,10 +15,9 @@
       "service": "gitshow"
     }
   ],
-  "r2_buckets": [
+  "kv_namespaces": [
     {
-      "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "gitshow-opennext-cache"
+      "binding": "NEXT_INC_CACHE_KV"
     }
   ],
   "durable_objects": {
