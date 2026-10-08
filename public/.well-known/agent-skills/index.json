@@ -1,0 +1,8 @@
+{
+  "skills": [
+    { "name": "developer-portfolio", "description": "Render a developer portfolio for any public GitHub user: https://gitshow.dev/{username}", "url": "https://gitshow.dev" },
+    { "name": "repo-showroom", "description": "Render an open source showroom for any public repository: https://gitshow.dev/{owner}/{repo}", "url": "https://gitshow.dev" },
+    { "name": "readme-badge", "description": "Dynamic 460x56 PNG stats badge for README embeds: https://gitshow.dev/api/card/{username}", "url": "https://gitshow.dev/api/card/ofershap" },
+    { "name": "og-image", "description": "Dynamic 1200x630 social preview PNG: https://gitshow.dev/api/og/{username}", "url": "https://gitshow.dev/api/og/ofershap" }
+  ]
+}
