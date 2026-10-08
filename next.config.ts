@@ -28,6 +28,16 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value:
+              '</sitemap.xml>; rel="sitemap", </index.md>; rel="alternate"; type="text/markdown", </llms.txt>; rel="help"; type="text/plain", </.well-known/ard.json>; rel="ard"; type="application/json"',
+          },
+        ],
+      },
+      {
         source: "/:all*(svg|jpg|png|ico|webp|woff2)",
         headers: [
           {
