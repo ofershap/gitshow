@@ -7,4 +7,9 @@ import doQueue from "@opennextjs/cloudflare/overrides/queue/do-queue";
 export default defineCloudflareConfig({
   incrementalCache: kvIncrementalCache,
   queue: doQueue,
+  // Workaround for opennextjs-cloudflare#754: on-demand ISR pages on dynamic
+  // routes never reach HIT (always STALE -> revalidated on every request),
+  // which was churning ~40k KV writes/day. Interception serves cached pages
+  // before hitting NextServer.
+  enableCacheInterception: true,
 });
