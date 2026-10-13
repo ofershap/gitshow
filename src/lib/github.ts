@@ -173,7 +173,10 @@ interface GraphQLContributionsResponse {
 }
 
 async function fetchContributions(username: string): Promise<ContributionsData | null> {
+  // The POST body is part of Next's fetch cache key. Millisecond timestamps
+  // created a fresh KV key on every render despite the 24h revalidate window.
   const now = new Date();
+  now.setUTCHours(0, 0, 0, 0);
   const oneYearAgo = new Date(now);
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
