@@ -16,8 +16,7 @@ export async function fetchNpmStats(
 ): Promise<NpmStats | null> {
   try {
     const res = await fetch(
-      `https://registry.npmjs.org/-/v1/search?text=maintainer:${username}&size=250`,
-      { next: { revalidate: 86400 } }
+      `https://registry.npmjs.org/-/v1/search?text=maintainer:${username}&size=250`
     );
     if (!res.ok) return null;
 
@@ -40,8 +39,7 @@ export async function fetchNpmStats(
         const name = limitedNames[i];
         try {
           const r = await fetch(
-            `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`,
-            { next: { revalidate: 86400 } }
+            `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`
           );
           if (!r.ok) {
             results[i] = { name, downloads: 0 };
