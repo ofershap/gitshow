@@ -57,7 +57,6 @@ async function githubFetch<T>(path: string): Promise<T> {
 
   const res = await fetch(`${GITHUB_API}${path}`, {
     headers,
-    next: { revalidate: 86400 },
   });
 
   if (res.status === 404) {
@@ -117,7 +116,6 @@ async function githubGraphQL<T>(query: string, variables: Record<string, unknown
       "User-Agent": "GitShow/1.0",
     },
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 86400 },
   });
 
   if (!res.ok) return null as T;
