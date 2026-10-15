@@ -1,33 +1,61 @@
-import { createHash } from "node:crypto";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { error } from "@opennextjs/aws/adapters/logger.js";
 import kvIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/kv-incremental-cache";
 import type { IncrementalCache } from "@opennextjs/aws/types/overrides";
 
-// Keep a week of stale data for ISR's failure fallback after the daily refresh.
-// Only new runtime writes get expiration. Existing keys are left untouched.
-const CACHE_RETENTION_SECONDS = 7 * 86400;
+// ISR entries live in the Cloudflare Cache API (per data center, free, no write
+// quota) instead of Workers KV, whose free tier allows only 1K writes/day.
+// KV is kept as a read-only fallback for entries written at build time.
+// Every runtime write goes to the Cache API only.
+const CACHE_NAME = "gitshow-isr";
+const RETENTION_SECONDS = 7 * 86400;
 
-const expiringKVCache: IncrementalCache = {
+function cacheUrl(key: string, cacheType?: string): string {
+  const buildId = process.env.NEXT_BUILD_ID ?? "no-build-id";
+  return (
+    "http://cache.local" + `/${buildId}/${key}`.replace(/\/+/g, "/") + `.${cacheType ?? "cache"}`
+  );
+}
+
+let cachePromise: Promise<Cache> | undefined;
+function getCache(): Promise<Cache> {
+  cachePromise ??= caches.open(CACHE_NAME);
+  return cachePromise;
+}
+
+const cdnIncrementalCache: IncrementalCache = {
   name: kvIncrementalCache.name,
-  get: kvIncrementalCache.get.bind(kvIncrementalCache),
-  delete: kvIncrementalCache.delete.bind(kvIncrementalCache),
-  async set(key, value, cacheType) {
-    const { env } = getCloudflareContext();
-    const kv = env.NEXT_INC_CACHE_KV;
-    if (!kv) throw new Error("No KV Namespace");
-    const prefix = env.NEXT_INC_CACHE_KV_PREFIX ?? "incremental-cache";
-    const buildId = process.env.NEXT_BUILD_ID ?? "no-build-id";
-    const hash = createHash("sha256").update(key).digest("hex");
-    const kvKey = `${prefix}/${buildId}/${hash}.${cacheType ?? "cache"}`.replace(/\/+/g, "/");
+  async get(key, cacheType) {
     try {
-      await kv.put(kvKey, JSON.stringify({ value, lastModified: Date.now() }), {
-        expirationTtl: CACHE_RETENTION_SECONDS,
-      });
-    } catch (error) {
-      // Match the upstream adapter: a failed cache write must not break a page.
-      console.error("Failed to set cache", error);
+      const cache = await getCache();
+      const hit = await cache.match(cacheUrl(key, cacheType));
+      if (hit) return await hit.json();
+    } catch (e) {
+      error("Failed to read ISR entry from Cache API", e);
+    }
+    return kvIncrementalCache.get(key, cacheType);
+  },
+  async set(key, value, cacheType) {
+    try {
+      const cache = await getCache();
+      await cache.put(
+        cacheUrl(key, cacheType),
+        new Response(JSON.stringify({ value, lastModified: Date.now() }), {
+          headers: { "cache-control": `max-age=${RETENTION_SECONDS}` },
+        })
+      );
+    } catch (e) {
+      // A failed cache write must not break a page.
+      error("Failed to write ISR entry to Cache API", e);
+    }
+  },
+  async delete(key) {
+    try {
+      const cache = await getCache();
+      await cache.delete(cacheUrl(key, "cache"));
+    } catch (e) {
+      error("Failed to delete ISR entry from Cache API", e);
     }
   },
 };
 
-export default expiringKVCache;
+export default cdnIncrementalCache;
