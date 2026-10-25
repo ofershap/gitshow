@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Outfit, JetBrains_Mono } from "next/font/google";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { WebMcpTools } from "@/components/webmcp-tools";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -96,6 +97,7 @@ export default function RootLayout({
       >
         {children}
         <ScrollToTop />
+        <WebMcpTools />
       </body>
     </html>
   );
