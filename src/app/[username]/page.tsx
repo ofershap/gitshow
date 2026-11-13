@@ -41,7 +41,7 @@ export async function generateMetadata({
       : "";
     const description = `${displayName}'s open source portfolio: ${repos.length} projects, ${totalStars} stars${contribMeta}${user.bio ? `. ${user.bio}` : ""}`;
 
-    const ogImage = `/api/og/${username}?v=${Math.floor(Date.now() / 86400000)}`;
+    const ogImage = `/api/og/${username}`;
 
     return {
       title,

@@ -42,7 +42,7 @@ export async function generateMetadata({
         ? `${data.repo.description} — ${data.repo.stargazers_count} stars, ${data.contributors.length} contributors.${langInfo}`
         : `Open source project: ${data.repo.stargazers_count} stars, ${data.contributors.length} contributors.${langInfo}`;
 
-    const ogImage = `/api/og/${owner}/${repo}?v=${Math.floor(Date.now() / 86400000)}`;
+    const ogImage = `/api/og/${owner}/${repo}`;
 
     return {
       title,

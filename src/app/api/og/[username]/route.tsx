@@ -108,7 +108,7 @@ export async function GET(
             <div style={{ display: "flex", position: "relative" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={user.avatar_url}
+                src={user.avatar_url + "&s=128"}
                 alt=""
                 width={100}
                 height={100}
