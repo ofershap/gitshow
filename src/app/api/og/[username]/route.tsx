@@ -8,7 +8,7 @@ import {
   registerPendingOg,
 } from "@/lib/og-kv";
 
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 
 async function renderOg(username: string) {
 

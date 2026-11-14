@@ -7,6 +7,8 @@
 // record the key (bounded, deduplicated) so the next render run can fill it.
 // KV reads do not count toward worker CPU time.
 
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+
 const PENDING_KEY = "og:pending";
 const PENDING_CAP = 200;
 const KEY_PREFIX = "og:";
@@ -22,10 +24,12 @@ interface CfEnvLike {
 
 async function ogKv(): Promise<OgKv | null> {
   try {
-    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
-    const ctx = (await getCloudflareContext({ async: true })) as unknown as CfEnvLike;
+    const ctx = (await getCloudflareContext({
+      async: true,
+    })) as unknown as CfEnvLike;
     const kv = ctx.env?.OG_CACHE_KV;
-    return kv ? (kv as OgKv) : null;
+    if (!kv) return null;
+    return kv as OgKv;
   } catch {
     return null;
   }
@@ -43,7 +47,13 @@ export function ogPngResponse(body: ArrayBuffer): Response {
 }
 
 export function ogFallbackRedirect(request: Request): Response {
-  return Response.redirect(new URL("/og-fallback.png", request.url), 302);
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: new URL("/og-fallback.png", request.url).toString(),
+      "Cache-Control": "public, max-age=60",
+    },
+  });
 }
 
 // Rendering stays available only to the offline render job: local next dev
@@ -59,7 +69,8 @@ export async function readCachedOg(key: string): Promise<ArrayBuffer | null> {
   const kv = await ogKv();
   if (!kv) return null;
   try {
-    return await kv.get(KEY_PREFIX + key, "arrayBuffer");
+    const hit = await kv.get(KEY_PREFIX + key, "arrayBuffer");
+    return hit;
   } catch {
     return null;
   }
