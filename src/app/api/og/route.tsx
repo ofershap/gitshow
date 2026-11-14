@@ -1,6 +1,13 @@
 import { ImageResponse } from "next/og";
+import {
+  isOgPrerender,
+  ogFallbackRedirect,
+  ogPngResponse,
+  readCachedOg,
+  registerPendingOg,
+} from "@/lib/og-kv";
 
-export async function GET() {
+async function renderOg() {
   return new ImageResponse(
     <div
       style={{
@@ -117,4 +124,12 @@ export async function GET() {
       },
     }
   );
+}
+
+export async function GET(request: Request) {
+  if (isOgPrerender(request)) return renderOg();
+  const cached = await readCachedOg("index");
+  if (cached) return ogPngResponse(cached);
+  await registerPendingOg("index");
+  return ogFallbackRedirect(request);
 }

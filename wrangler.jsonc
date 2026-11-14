@@ -19,6 +19,10 @@
     {
       "binding": "NEXT_INC_CACHE_KV",
       "id": "9bea14c0204a453d809bf2b6e38b0f60"
+    },
+    {
+      "binding": "OG_CACHE_KV",
+      "id": "8c67f215ddd24b1dbdb6dcedbb27ed30"
     }
   ],
   "durable_objects": {

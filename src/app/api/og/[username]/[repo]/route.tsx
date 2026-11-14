@@ -1,13 +1,16 @@
 import { ImageResponse } from "next/og";
 import { fetchRepoShowroom, RepoNotFoundError } from "@/lib/github-repo";
+import {
+  isOgPrerender,
+  ogFallbackRedirect,
+  ogPngResponse,
+  readCachedOg,
+  registerPendingOg,
+} from "@/lib/og-kv";
 
 export const revalidate = 86400;
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ username: string; repo: string }> }
-) {
-  const { username: owner, repo } = await params;
+async function renderOg(owner: string, repo: string) {
 
   try {
     const data = await fetchRepoShowroom(owner, repo);
@@ -331,4 +334,23 @@ function fmtNum(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return n.toString();
+}
+
+const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/;
+const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ username: string; repo: string }> }
+) {
+  const { username: owner, repo } = await params;
+  if (isOgPrerender(request)) return renderOg(owner, repo);
+  if (!USERNAME_RE.test(owner) || !REPO_RE.test(repo)) {
+    return ogFallbackRedirect(request);
+  }
+  const key = `repo/${owner.toLowerCase()}/${repo.toLowerCase()}`;
+  const cached = await readCachedOg(key);
+  if (cached) return ogPngResponse(cached);
+  await registerPendingOg(key);
+  return ogFallbackRedirect(request);
 }

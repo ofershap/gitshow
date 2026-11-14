@@ -1,13 +1,16 @@
 import { ImageResponse } from "next/og";
 import { fetchProfile, NotFoundError } from "@/lib/github";
+import {
+  isOgPrerender,
+  ogFallbackRedirect,
+  ogPngResponse,
+  readCachedOg,
+  registerPendingOg,
+} from "@/lib/og-kv";
 
 export const revalidate = 86400;
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ username: string }> }
-) {
-  const { username } = await params;
+async function renderOg(username: string) {
 
   try {
     const data = await fetchProfile(username);
@@ -398,4 +401,20 @@ function starRank(stars: number): string {
   if (stars >= 10_000) return "Legend";
   if (stars >= 1_000) return "Architect";
   return "Creator";
+}
+
+const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/;
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ username: string }> }
+) {
+  const { username } = await params;
+  if (isOgPrerender(request)) return renderOg(username);
+  if (!USERNAME_RE.test(username)) return ogFallbackRedirect(request);
+  const key = `user/${username.toLowerCase()}`;
+  const cached = await readCachedOg(key);
+  if (cached) return ogPngResponse(cached);
+  await registerPendingOg(key);
+  return ogFallbackRedirect(request);
 }
