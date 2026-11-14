@@ -26,39 +26,45 @@ export async function fetchNpmStats(
     if (packageNames.length === 0) return null;
 
     const limitedNames = packageNames.slice(0, 200);
-    const CONCURRENCY = 6;
-    const results: { name: string; downloads: number }[] = new Array(
-      limitedNames.length
-    );
-    let nextIndex = 0;
-
-    async function worker() {
-      while (true) {
-        const i = nextIndex++;
-        if (i >= limitedNames.length) break;
-        const name = limitedNames[i];
-        try {
-          const r = await fetch(
-            `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`
-          );
-          if (!r.ok) {
-            results[i] = { name, downloads: 0 };
-            continue;
-          }
-          const d: NpmDownloads = await r.json();
-          results[i] = { name: d.package, downloads: d.downloads };
-        } catch {
-          results[i] = { name, downloads: 0 };
+    // Scoped packages are not supported by the bulk endpoint; fetch them individually.
+    const bulkNames = limitedNames.filter((n) => !n.startsWith("@"));
+    const scopedNames = limitedNames.filter((n) => n.startsWith("@"));
+    const results: { name: string; downloads: number }[] = [];
+    for (const name of scopedNames) {
+      try {
+        const r = await fetch(
+          `${NPM_API}/downloads/point/last-month/${encodeURIComponent(name)}`
+        );
+        if (!r.ok) {
+          results.push({ name, downloads: 0 });
+          continue;
         }
+        const d: NpmDownloads = await r.json();
+        results.push({ name: d.package, downloads: d.downloads });
+      } catch {
+        results.push({ name, downloads: 0 });
       }
     }
-
-    await Promise.all(
-      Array.from(
-        { length: Math.min(CONCURRENCY, limitedNames.length) },
-        () => worker()
-      )
-    );
+    // Bulk endpoint: one subrequest per chunk instead of one per package.
+    // Per-package fetching (up to 200 requests) blows the Cloudflare
+    // Workers subrequest limit on accounts with many packages.
+    const CHUNK = 100;
+    for (let start = 0; start < bulkNames.length; start += CHUNK) {
+      const chunk = bulkNames.slice(start, start + CHUNK);
+      try {
+        const r = await fetch(
+          `${NPM_API}/downloads/point/last-month/${chunk.join(",")}`
+        );
+        if (!r.ok) continue;
+        const data = (await r.json()) as Record<string, NpmDownloads | null>;
+        for (const name of chunk) {
+          const d = data[name];
+          results.push({ name, downloads: d?.downloads ?? 0 });
+        }
+      } catch {
+        // skip chunk; others may still succeed
+      }
+    }
 
     const sorted = results
       .filter((p) => p.downloads > 0)
