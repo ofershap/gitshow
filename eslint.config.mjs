@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local/CI utility scripts are not part of the Next app (scripts/ was
+    // historically gitignored, so eslint never scanned it):
+    "scripts/**",
   ]),
 ]);
 
