@@ -1,0 +1,41 @@
+name: og-refresh
+
+# Daily re-render of og card images outside the worker (Workers Free CPU is
+# 10ms, satori does not fit), uploaded to the gitshow-og-cache KV namespace.
+# The worker only reads KV and never renders.
+
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: start next dev
+        run: |
+          OG_PRERENDER_KEY=og-render-ci nohup npx next dev -p 3939 > /tmp/nextdev.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3939/ && exit 0
+            sleep 2
+          done
+          echo "next dev did not come up"; cat /tmp/nextdev.log; exit 1
+      - name: render and upload
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: 850ede4255e50c691d948d2ba97be909
+          OG_KV_NAMESPACE_ID: 8c67f215ddd24b1dbdb6dcedbb27ed30
+          OG_PRERENDER_KEY: og-render-ci
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/og-refresh.mjs
