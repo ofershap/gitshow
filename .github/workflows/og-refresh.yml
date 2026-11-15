@@ -24,6 +24,8 @@ jobs:
           cache: npm
       - run: npm ci
       - name: start next dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           OG_PRERENDER_KEY=og-render-ci nohup npx next dev -p 3939 > /tmp/nextdev.log 2>&1 &
           for i in $(seq 1 60); do
