@@ -1,6 +1,6 @@
 # GitShow — Beautiful Developer Portfolio & Repository Showroom from Any GitHub Profile or Repo
 
-> GitShow transforms any public GitHub profile into a stunning, auto-generated developer portfolio, and any public repository into an open source showroom. Replace github.com with gitshow.dev in any profile or repo URL — no signup, no config, no deploy.
+> GitShow transforms any public GitHub profile into a auto-generated developer portfolio, and any public repository into an open source showroom. Replace github.com with gitshow.dev in any profile or repo URL — no signup, no config, no deploy.
 
 GitShow pulls data from the GitHub API and npm registry to show what GitHub doesn't: npm download stats, smart repo categorization, tech stack visualization, focus areas, project timelines, open source contribution history, and per-repo showrooms with team, languages, commit activity, community health, and latest releases.
 
@@ -10,7 +10,7 @@ Replace `github.com` with `gitshow.dev` in any GitHub URL:
 - github.com/username → gitshow.dev/username (developer portfolio)
 - github.com/owner/repo → gitshow.dev/owner/repo (repository showroom)
 - Works for any public GitHub user, organization, or repository
-- Data refreshes every hour via ISR caching
+- Profiles and repository pages use a 24-hour revalidation interval. Cached data may remain visible while a refresh runs.
 
 ## Key Pages
 
@@ -32,11 +32,11 @@ Replace `github.com` with `gitshow.dev` in any GitHub URL:
 
 - **Social Preview API (Profiles)**
   https://gitshow.dev/api/og/{username}
-  Dynamic 1200×630 OG image for profile sharing on Twitter and LinkedIn.
+  Pregenerated 1200×630 image for profile sharing. Refreshed daily; a default image is returned until a profile image is generated.
 
 - **Social Preview API (Repos)**
   https://gitshow.dev/api/og/{owner}/{repo}
-  Dynamic 1200×630 OG image for repository sharing with stats, contributors, and languages.
+  Pregenerated 1200×630 repository image. Refreshed daily; a default image is returned until a repository image is generated.
 
 ## Featured Profiles
 
@@ -63,7 +63,7 @@ Replace `github.com` with `gitshow.dev` in any GitHub URL:
 - Tech stack language breakdown
 - Focus areas topic cloud
 - Project creation timeline
-- Dynamic OG social cards for sharing
+- Daily-refreshed OG social cards for sharing
 - README badge card for embedding
 - One-click share to X and LinkedIn
 
@@ -86,7 +86,7 @@ Replace `github.com` with `gitshow.dev` in any GitHub URL:
 - Uses GitHub GraphQL API for contributions
 - Uses npm registry API for download statistics
 - Schema.org structured data: WebSite, SoftwareApplication, FAQPage, ProfilePage, SoftwareSourceCode, BreadcrumbList
-- Deployed on Vercel
+- Hosted on Cloudflare Workers
 - Open source under MIT license
 
 ## Source Code

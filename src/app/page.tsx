@@ -4,7 +4,7 @@ import { UrlSwap } from "@/components/url-swap";
 import { UsernameInput } from "@/components/username-input";
 import { ProfileTicker } from "@/components/profile-ticker";
 import { Footer } from "@/components/footer";
-import { JsonLd, websiteJsonLd, webApplicationJsonLd, faqPageJsonLd } from "@/components/json-ld";
+import { JsonLd, websiteJsonLd, webApplicationJsonLd, faqPageJsonLd, productFaqs } from "@/components/json-ld";
 
 const svg = (children: ReactNode) => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +46,7 @@ const FEATURES: { icon: ReactNode; title: string; text: string }[] = [
   {
     icon: svg(<><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></>),
     title: "Social Preview Cards",
-    text: "Dynamic 1200x630 OG images generated per profile. Looks good when shared on X and LinkedIn.",
+    text: "1200x630 profile and repository preview images for X and LinkedIn. Generated images refresh daily; new pages use a default image until the next refresh.",
   },
   {
     icon: svg(<><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>),
@@ -55,8 +55,8 @@ const FEATURES: { icon: ReactNode; title: string; text: string }[] = [
   },
   {
     icon: svg(<><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></>),
-    title: "LLM & GEO Ready",
-    text: "Schema.org structured data, llms.txt, AI crawler access. Built to surface in ChatGPT, Perplexity, and Google AI.",
+    title: "Readable profile data",
+    text: "Server-rendered profiles and repository pages include structured data and links to the original GitHub sources.",
   },
 ];
 
@@ -173,7 +173,7 @@ export default function Home() {
                 step="3"
                 title="Share on social"
                 code="https://gitshow.dev/your-username"
-                text="Every profile has a dynamic OG image. Paste the link on X or LinkedIn and it looks great."
+                text="Share a profile or repository link on X or LinkedIn. Preview images refresh daily; a new page may use the default image first."
               />
             </div>
           </div>
@@ -202,13 +202,29 @@ export default function Home() {
         </div>
       </section>
 
+      <section aria-label="GitShow questions and answers" className="relative px-4 py-16">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="mb-8 text-center font-display text-3xl font-bold text-white md:text-4xl">
+            About GitShow
+          </h2>
+          <dl className="space-y-6">
+            {productFaqs.map(({ question, answer }) => (
+              <div key={question} className="glass rounded-2xl p-6">
+                <dt className="font-display text-base font-semibold text-white">{question}</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-zinc-400">{answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
       <section aria-label="Open source and free" className="relative px-4 py-16">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
             Open source, free, no strings
           </h2>
           <p className="mb-6 text-base leading-relaxed text-zinc-400">
-            MIT licensed. Self-host it, fork it, contribute. Built with Next.js, React, TypeScript, and Tailwind CSS. Deployed on Vercel.
+            MIT licensed. Self-host it, fork it, contribute. Built with Next.js, React, TypeScript, and Tailwind CSS. Hosted on Cloudflare Workers.
           </p>
           <a
             href="https://github.com/ofershap/gitshow"

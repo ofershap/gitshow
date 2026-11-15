@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "Turn GitHub profiles and repos into portfolios and project showrooms with npm stats, repo categories, and tech stacks. Free, open source, no signup.",
   applicationName: "GitShow",
   verification: {
+    google: "zn8NNlKIe-7WU0kPAKfIDcZmwISpj499v9dFBXpCsDE",
     other: { "msvalidate.01": "AAD3E490305203BA80DF599EC9F9067F" },
   },
   keywords: [
