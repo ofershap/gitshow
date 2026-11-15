@@ -72,13 +72,33 @@ async function getPending() {
     .slice(0, PENDING_CAP);
 }
 
+// The local Next server shares the production /api/* limit: 20/min per IP.
+// Pace requests rather than disabling the middleware in production.
+const RENDER_INTERVAL_MS = 3100;
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function render(path) {
-  const res = await fetch(`http://localhost:${PORT}${path}`, {
+  await sleep(RENDER_INTERVAL_MS);
+  const request = () => fetch(`http://localhost:${PORT}${path}`, {
     headers: { "x-og-prerender": PRERENDER_KEY },
+    signal: AbortSignal.timeout(60000),
   });
+  let res = await request();
+  if (res.status === 429) {
+    // One bounded retry. Never hammer a throttled local/upstream service.
+    const seconds = Number(res.headers.get("retry-after"));
+    const waitMs = Number.isFinite(seconds) && seconds > 0
+      ? Math.min(Math.max(seconds * 1000, 60000), 65000)
+      : 60000;
+    await res.arrayBuffer();
+    await sleep(waitMs);
+    res = await request();
+  }
   const type = res.headers.get("content-type") || "";
   if (!res.ok || !type.includes("image/png")) {
-    throw new Error(`render ${path}: HTTP ${res.status} ${type}`);
+    const error = new Error(`render ${path}: HTTP ${res.status} ${type}`);
+    error.status = res.status;
+    throw error;
   }
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.length < 10000) throw new Error(`render ${path}: suspicious ${buf.length}B`);
@@ -118,6 +138,10 @@ for (const key of keys) {
   } catch (e) {
     failures++;
     console.error(`FAIL ${key}: ${e.message}`);
+    if (e.status === 429 || e.status === 403) {
+      console.error("stopping on persistent throttling; remaining keys stay pending");
+      break;
+    }
   }
 }
 
