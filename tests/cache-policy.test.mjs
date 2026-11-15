@@ -12,6 +12,9 @@ for(const path of ['/','/ofershap','/ofershap/gitshow','/api/og','/api/og/ofersh
 }
 for(const [name,path,method,req,res] of [
  ['unknown route','/internal/admin/details','GET',{},response()],
+ ['unknown API','/api/admin','GET',{},response()],
+ ['higher-priority zero TTL','/ofershap','GET',{},response(200,{'cdn-cache-control':'max-age=0'})],
+ ['highest-priority zero TTL','/ofershap','GET',{},response(200,{'cloudflare-cdn-cache-control':'max-age=0'})],
  ['post','/ofershap','POST',{},response()],
  ['cookie','/ofershap','GET',{'cookie':'session=example'},response()],
  ['authorization','/ofershap','GET',{'authorization':'Bearer test'},response()],

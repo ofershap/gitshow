@@ -12,18 +12,21 @@ export function applyCachePolicy(request, response) {
     .map(name => headers.get(name)).filter(Boolean);
   const safe = ['GET', 'HEAD'].includes(request.method)
     && PUBLIC.test(new URL(request.url).pathname)
+    && !/^\/(?:api|_next|internal)(?:\/|$)/.test(new URL(request.url).pathname.replace(/^\/api\/(?:og|card)(?:\/|$)/, '/'))
     && response.status === 200
     && !request.headers.has('cookie')
     && !request.headers.has('authorization')
     && !headers.has('set-cookie')
     && !controls.some(value => DENY.test(value))
-    && controls.some(value => POSITIVE_TTL.test(value));
+    && controls.length > 0
+    && POSITIVE_TTL.test(headers.get('cloudflare-cdn-cache-control')
+      || headers.get('cdn-cache-control') || headers.get('cache-control') || '');
 
   // Vary is checked before invoking the Worker. Add these even on anonymous
   // fills, so a later stateful request cannot hit that anonymous response.
   const vary = new Map((headers.get('vary') || '').split(',').map(x => x.trim())
     .filter(Boolean).map(x => [x.toLowerCase(), x]));
-  for (const name of ['Cookie', 'Authorization', 'Host']) vary.set(name.toLowerCase(), name);
+  for (const name of ['RSC', 'Next-Router-State-Tree', 'Next-Router-Prefetch', 'Next-Router-Segment-Prefetch', 'Next-Url', 'Cookie', 'Authorization', 'Host']) vary.set(name.toLowerCase(), name);
   headers.set('vary', [...vary.values()].join(', '));
   if (!safe) {
     headers.set('cloudflare-cdn-cache-control', 'no-store');

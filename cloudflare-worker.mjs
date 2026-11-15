@@ -2,8 +2,10 @@
 import handler from './.open-next/worker.js';
 import { applyCachePolicy } from './cloudflare/cache-policy.mjs';
 export { DOQueueHandler, DOShardedTagCache, BucketCachePurge } from './.open-next/worker.js';
-export default {
+const worker = {
   async fetch(request, env, ctx) {
     return applyCachePolicy(request, await handler.fetch(request, env, ctx));
   },
 };
+
+export default worker;
