@@ -9,6 +9,7 @@ import {
 } from "./types";
 import { fetchNpmStats } from "./npm";
 import { categorizeRepos } from "./categorize";
+import { profileRepoFields, profileUserFields } from "./profile-fields";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -82,7 +83,7 @@ async function fetchAllRepos(username: string): Promise<GitHubRepo[]> {
     const batch = await githubFetch<GitHubRepo[]>(
       `/users/${username}/repos?per_page=100&type=owner&page=${page}`
     );
-    all.push(...batch);
+    all.push(...batch.map(profileRepoFields));
     if (batch.length < 100) break;
     page++;
   }
@@ -265,7 +266,7 @@ function computeTimeline(
 
 export const fetchProfile = cache(async (username: string): Promise<ProfileData> => {
   const [user, repos] = await Promise.all([
-    githubFetch<GitHubUser>(`/users/${username}`),
+    githubFetch<GitHubUser>(`/users/${username}`).then(profileUserFields),
     fetchAllRepos(username),
   ]);
 
