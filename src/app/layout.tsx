@@ -1,26 +1,8 @@
 import type { Metadata } from "next";
-import { DM_Sans, Outfit, JetBrains_Mono } from "next/font/google";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { WebMcpTools } from "@/components/webmcp-tools";
+import "./fonts.css";
 import "./globals.css";
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gitshow.dev"),
@@ -91,8 +73,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" style={{ colorScheme: "dark" }}>
+      <head>
+        <link rel="preload" href="/fonts/13971731025ec697-s.p.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/558ca1a6aa3cb55e-s.p.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/7b0b24f36b1a6d0b-s.p.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      </head>
       <body
-        className={`${dmSans.variable} ${outfit.variable} ${jetbrainsMono.variable} relative min-h-screen font-sans antialiased`}
+        className="relative min-h-screen font-sans antialiased"
         style={{ backgroundColor: "var(--color-surface)", color: "#e2e8f0" }}
       >
         {children}
