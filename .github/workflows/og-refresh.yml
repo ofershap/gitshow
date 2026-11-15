@@ -27,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          OG_PRERENDER_KEY=og-render-ci nohup npx next dev -p 3939 > /tmp/nextdev.log 2>&1 &
+          OG_PRERENDER_KEY=og-render-ci nohup npx next dev --webpack -p 3939 > /tmp/nextdev.log 2>&1 &
           for i in $(seq 1 60); do
             curl -sf -o /dev/null http://localhost:3939/ && exit 0
             sleep 2
