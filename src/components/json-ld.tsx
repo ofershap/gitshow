@@ -9,7 +9,7 @@ export function JsonLd({ data }: JsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
     />
   );
 }
@@ -21,7 +21,7 @@ export function websiteJsonLd() {
     name: "GitShow",
     url: "https://gitshow.dev",
     description:
-      "Replace github.com with gitshow.dev in any profile or repository URL to get a stunning developer portfolio or open source showroom.",
+      "Replace github.com with gitshow.dev in any profile or repository URL to get a developer portfolio or open source showroom.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -42,7 +42,7 @@ export function webApplicationJsonLd() {
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Web",
     description:
-      "Generate a stunning developer portfolio from any public GitHub profile, or a showroom page for any repository. Replace github.com with gitshow.dev — no signup, no config, no deploy.",
+      "Generate a developer portfolio from any public GitHub profile, or a showroom page for any repository. Replace github.com with gitshow.dev — no signup, no config, no deploy.",
     featureList: [
       "npm download statistics across all packages",
       "Smart repo categorization by type (MCP Servers, CLI Tools, React & UI, DevOps, AI & ML)",
@@ -50,7 +50,7 @@ export function webApplicationJsonLd() {
       "Tech stack language breakdown visualization",
       "Focus areas topic cloud",
       "Project creation timeline",
-      "Dynamic OG social cards for Twitter and LinkedIn",
+      "Daily-refreshed social preview cards for X and LinkedIn",
       "Embeddable README badge card",
       "One-click share to X and LinkedIn",
       "Works for users, organizations, and repositories",
@@ -75,68 +75,42 @@ export function webApplicationJsonLd() {
   };
 }
 
+export const productFaqs = [
+  {
+    question: "What is GitShow?",
+    answer: "GitShow is a free, open source GitHub portfolio generator. It turns a public GitHub profile into a portfolio, and a public repository into a project showroom. It is a separate project, not a GitHub product.",
+  },
+  {
+    question: "How do I turn my GitHub profile into a portfolio?",
+    answer: "Replace github.com with gitshow.dev in your profile URL. For example, github.com/ofershap becomes gitshow.dev/ofershap. You do not need to sign up, connect a GitHub account, or deploy a site.",
+  },
+  {
+    question: "What does GitShow add to a GitHub profile?",
+    answer: "It groups original projects by category and shows npm download statistics, public contribution activity, languages, and focus areas. Repository pages show contributors, commit activity, community health, releases, and recent issues and pull requests. Available data varies by profile and repository.",
+  },
+  {
+    question: "Does it work for organizations and individual repositories?",
+    answer: "Yes. Use gitshow.dev/organization for a public organization, or gitshow.dev/owner/repo for a public repository. Private repositories are not supported.",
+  },
+  {
+    question: "How current are the data and social preview images?",
+    answer: "Profile and repository pages use a 24-hour revalidation interval. Cached data can remain visible while a refresh runs. Social preview images are generated in a daily refresh; a new page may show the default image until the next refresh. GitHub API limits or a failed refresh can delay updates.",
+  },
+  {
+    question: "Can I embed a portfolio badge in my README?",
+    answer: "Yes. Use the README badge example above and replace YOUR_USERNAME with your GitHub username. The badge links back to your GitShow profile. GitShow is free to use and its source is available under the MIT license.",
+  },
+];
+
 export function faqPageJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What is GitShow?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "GitShow is a free, open source tool that transforms any public GitHub profile into a beautiful developer portfolio, and any repository into an open source showroom. Replace github.com with gitshow.dev in any profile or repo URL to see it in action.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How do I use GitShow?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Replace github.com with gitshow.dev in any GitHub URL. For profiles: github.com/torvalds becomes gitshow.dev/torvalds. For repos: github.com/vercel/next.js becomes gitshow.dev/vercel/next.js. No signup, no configuration, no deployment needed.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What does GitShow show that GitHub doesn't?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "GitShow shows npm download statistics, smart repo categorization (MCP Servers, CLI Tools, React & UI, DevOps, etc.), open source contributions to external projects, tech stack visualization, focus areas, project creation timelines, and dynamic social preview cards.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is GitShow free?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, GitShow is completely free and open source under the MIT license. You can also self-host it or fork it.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Does GitShow work with GitHub organizations?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, GitShow works with both personal GitHub profiles and organization profiles. Just use gitshow.dev/org-name.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I use GitShow for a specific repository?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes. Use gitshow.dev/owner/repo to see any public repository as a showroom page with the team, language breakdown, commit activity, community health, latest release, and recent issues and pull requests.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How do I add a GitShow badge to my README?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Add this markdown to your README: [![Made by USERNAME](https://gitshow.dev/api/card/USERNAME)](https://gitshow.dev/USERNAME). Replace USERNAME with your GitHub username. The badge updates automatically every hour.",
-        },
-      },
-    ],
+    mainEntity: productFaqs.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
   };
 }
 
